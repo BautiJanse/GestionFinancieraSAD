@@ -8,19 +8,19 @@ const Dashboard = () => {
       
       {/* Widgets */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-        <div className="bg-[#1A3D6D] text-white p-4 rounded-lg shadow-md">
+        <div className="bg-black text-white p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg">
           <h2 className="text-lg font-semibold">Ingresos</h2>
           <p className="text-2xl">$628</p>
         </div>
-        <div className="bg-[#1A3D6D] text-white p-4 rounded-lg shadow-md">
+        <div className="bg-black text-white p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg">
           <h2 className="text-lg font-semibold">Gastos</h2>
           <p className="text-2xl">$520</p>
         </div>
-        <div className="bg-[#1A3D6D] text-white p-4 rounded-lg shadow-md">
+        <div className="bg-black text-white p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg">
           <h2 className="text-lg font-semibold">Forecast</h2>
           <p className="text-2xl">45%</p>
         </div>
-        <div className="bg-[#1A3D6D] text-white p-4 rounded-lg shadow-md">
+        <div className="bg-black text-white p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg">
           <h2 className="text-lg font-semibold">Balance</h2>
           <p className="text-2xl">$108</p>
         </div>
