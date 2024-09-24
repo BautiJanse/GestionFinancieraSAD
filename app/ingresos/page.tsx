@@ -1,54 +1,57 @@
 // app/ingresos/page.tsx
 'use client';
 
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { FaPlus, FaChevronRight } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 
 const IngresosPage = () => {
-  // Lista de ingresos simulada para el ejemplo.
-  const [ingresos] = useState([
-    { id: 1, title: 'Salario Mensual', amount: 1500, date: '01-09-2023' },
-    { id: 2, title: 'Venta de automóvil', amount: 6000, date: '15-09-2023' },
-    { id: 3, title: 'Alquiler de propiedad', amount: 800, date: '22-09-2023' },
+  const [ingresos, setIngresos] = useState([
+    { id: 1, description: 'Salario', amount: 2000, date: '2024-01-01' },
+    { id: 2, description: 'Venta coche', amount: 5000, date: '2024-02-15' },
+    { id: 3, description: 'Freelance', amount: 1200, date: '2024-03-10' },
+    { id: 3, description: 'Freelance', amount: 1200, date: '2024-03-10' },
+    { id: 3, description: 'Freelance', amount: 1200, date: '2024-03-10' },
+
   ]);
 
+  const router = useRouter();
+
+  const handleIngresoClick = (id: number) => {
+    // Al hacer clic en un ítem, redirige al detalle del ingreso
+    router.push(`/ingresos/${id}`);
+  };
+
   return (
-    <div className="p-6 bg-white min-h-screen">
+    <div className="relative p-6 bg-white min-h-screen">
       <h1 className="text-2xl font-bold text-black mb-6">Ingresos</h1>
 
-      {/* Botón de agregar ingreso */}
-      <div className="flex justify-end mb-6">
-        <Link href="/ingresos/nuevo">
-          <button className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition-colors duration-300">
-            <FaPlus />
-            <span>Agregar Ingreso</span>
-          </button>
-        </Link>
+      {/* Lista de ingresos */}
+      <div className="space-y-4">
+        {ingresos.map((ingreso) => (
+          <div
+            key={ingreso.id}
+            onClick={() => handleIngresoClick(ingreso.id)}
+            className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-lg shadow-md hover:bg-gray-200 hover:shadow-xl transition-transform transform hover:scale-105 cursor-pointer"
+          >
+            <div>
+              <h2 className="text-lg font-semibold">{ingreso.description}</h2>
+              <p className="text-sm text-gray-500">{ingreso.date}</p>
+            </div>
+            <div>
+              <p className="text-lg font-bold">${ingreso.amount}</p>
+            </div>
+          </div>
+        ))}
       </div>
 
-      {/* Listado de ingresos */}
-      <div className="bg-gray-100 rounded-lg p-4 shadow-md">
-        {ingresos.length > 0 ? (
-          <ul className="divide-y divide-gray-300">
-            {ingresos.map((ingreso) => (
-              <li key={ingreso.id} className="flex justify-between items-center py-4 px-4 hover:bg-gray-200 rounded-lg transition-colors duration-200">
-                <div>
-                  <h2 className="text-lg font-semibold text-black">{ingreso.title}</h2>
-                  <p className="text-gray-600">${ingreso.amount} - {ingreso.date}</p>
-                </div>
-                <Link href={`/ingresos/${ingreso.id}`}>
-                  <button className="flex items-center text-blue-500 hover:text-blue-700 transition-colors duration-300">
-                    Ver Detalle <FaChevronRight className="ml-2" />
-                  </button>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-gray-500">No hay ingresos registrados.</p>
-        )}
-      </div>
+      {/* Botón de agregar ingreso */}
+      <button
+        onClick={() => router.push('/ingresos/add')}
+        className="fixed bottom-6 right-6 bg-black text-white p-4 rounded-full shadow-lg hover:bg-gray-800 hover:scale-110 transition-transform duration-300"
+      >
+        <FaPlus className="text-xl" />
+      </button>
     </div>
   );
 };
