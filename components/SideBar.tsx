@@ -3,7 +3,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { FaTachometerAlt, FaMoneyBillWave, FaDollarSign, FaChartLine, FaSignOutAlt } from 'react-icons/fa';
+import { usePathname } from 'next/navigation';
+import { FaTachometerAlt, FaMoneyBillWave, FaDollarSign, FaChartLine, FaSignOutAlt, FaProjectDiagram } from 'react-icons/fa';
 import { MdOutlineClose } from 'react-icons/md'; // Icono para cerrar más estilizado
 import { FiMenu } from 'react-icons/fi'; // Icono de menú desplegable
 
@@ -12,6 +13,10 @@ const Sidebar = () => {
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
+  };
+
+  const handleLinkClick = () => {
+    setIsOpen(false);
   };
 
   return (
@@ -38,19 +43,23 @@ const Sidebar = () => {
           <ul className="space-y-6">
             <li className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400">
               <FaTachometerAlt className="mr-3" /> 
-              <Link href="/dashboard">Dashboard</Link>
+              <Link href="/dashboard" onClick={handleLinkClick}>Dashboard</Link>
             </li>
             <li className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400">
               <FaDollarSign className="mr-3" /> 
-              <Link href="/ingresos">Ingresos</Link>
+              <Link href="/ingresos" onClick={handleLinkClick}>Ingresos</Link>
             </li>
             <li className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400">
               <FaMoneyBillWave className="mr-3" /> 
-              <Link href="/gastos">Gastos</Link>
+              <Link href="/gastos" onClick={handleLinkClick}>Gastos</Link>
             </li>
             <li className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400">
               <FaChartLine className="mr-3" /> 
-              <Link href="/forecast">Forecast</Link>
+              <Link href="/forecast" onClick={handleLinkClick}>Forecast</Link>
+            </li>
+            <li className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400">
+              <FaProjectDiagram className="mr-3" /> 
+              <Link href="/inversiones" onClick={handleLinkClick}>Inversiones</Link>
             </li>
           </ul>
         </nav>

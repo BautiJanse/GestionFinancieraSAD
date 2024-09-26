@@ -17,7 +17,11 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  color: #000; /* Texto negro */
+  background-color: #fff; /* Fondo blanco */
 }
+
+
 
 @layer utilities {
   .text-balance {

@@ -1,20 +1,20 @@
-// app/ingresos/page.tsx
+// app/gastos/page.tsx
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaPlus } from 'react-icons/fa';
 
-const IngresosPage = () => {
+const GastosPage = () => {
   const router = useRouter();
-  
-  // Simulación de datos de ingresos
-  const [ingresos, setIngresos] = useState([
-    { id: 1, description: 'Salario', amount: 2000, date: '2024-01-01', category: 'Salario' },
-    { id: 2, description: 'Venta coche', amount: 5000, date: '2024-02-15', category: 'Venta' },
-    { id: 3, description: 'Freelance', amount: 1200, date: '2024-03-10', category: 'Freelance' },
+
+  // Simulación de datos de gastos
+  const [gastos, setGastos] = useState([
+    { id: 1, description: 'Compra de alimentos', amount: 100, date: '2024-01-02', category: 'Alimentos' },
+    { id: 2, description: 'Pago de alquiler', amount: 500, date: '2024-02-01', category: 'Alquiler' },
+    { id: 3, description: 'Factura de electricidad', amount: 150, date: '2024-03-10', category: 'Servicios' },
   ]);
-  
+
   // Estados para los filtros
   const [filterCategory, setFilterCategory] = useState('');
   const [filterName, setFilterName] = useState('');
@@ -23,24 +23,24 @@ const IngresosPage = () => {
   const [filterDateStart, setFilterDateStart] = useState('');
   const [filterDateEnd, setFilterDateEnd] = useState('');
 
-  // Función para filtrar ingresos
-  const filteredIngresos = ingresos.filter((ingreso) => {
-    const matchesCategory = filterCategory ? ingreso.category === filterCategory : true;
-    const matchesName = filterName ? ingreso.description.toLowerCase().includes(filterName.toLowerCase()) : true;
-    const matchesAmount = (filterAmountMin ? ingreso.amount >= parseFloat(filterAmountMin) : true) &&
-                          (filterAmountMax ? ingreso.amount <= parseFloat(filterAmountMax) : true);
-    const matchesDate = (filterDateStart ? new Date(ingreso.date) >= new Date(filterDateStart) : true) &&
-                        (filterDateEnd ? new Date(ingreso.date) <= new Date(filterDateEnd) : true);
+  // Función para filtrar gastos
+  const filteredGastos = gastos.filter((gasto) => {
+    const matchesCategory = filterCategory ? gasto.category === filterCategory : true;
+    const matchesName = filterName ? gasto.description.toLowerCase().includes(filterName.toLowerCase()) : true;
+    const matchesAmount = (filterAmountMin ? gasto.amount >= parseFloat(filterAmountMin) : true) &&
+                          (filterAmountMax ? gasto.amount <= parseFloat(filterAmountMax) : true);
+    const matchesDate = (filterDateStart ? new Date(gasto.date) >= new Date(filterDateStart) : true) &&
+                        (filterDateEnd ? new Date(gasto.date) <= new Date(filterDateEnd) : true);
     return matchesCategory && matchesName && matchesAmount && matchesDate;
   });
 
-  const handleIngresoClick = (id: number) => {
-    router.push(`/ingresos/${id}`);
+  const handleGastoClick = (id: number) => {
+    router.push(`/gastos/${id}`);
   };
 
   return (
     <div className="p-8 bg-white min-h-screen">
-      <h1 className="text-3xl font-bold text-black mb-8">Ingresos</h1>
+      <h1 className="text-3xl font-bold text-black mb-8">Gastos</h1>
 
       {/* Filtros */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
@@ -53,15 +53,15 @@ const IngresosPage = () => {
             className="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
           >
             <option value="">Todas</option>
-            <option value="Salario">Salario</option>
-            <option value="Freelance">Freelance</option>
-            <option value="Inversiones">Inversiones</option>
-            <option value="Venta">Venta</option>
+            <option value="Alimentos">Alimentos</option>
+            <option value="Alquiler">Alquiler</option>
+            <option value="Servicios">Servicios</option>
+            <option value="Transporte">Transporte</option>
             <option value="Otro">Otro</option>
           </select>
         </div>
 
-        {/* Nombre del ingreso */}
+        {/* Nombre del gasto */}
         <div>
           <label className="block text-black font-bold mb-2">Nombre</label>
           <input
@@ -120,28 +120,28 @@ const IngresosPage = () => {
         </div>
       </div>
 
-      {/* Lista de ingresos filtrada */}
+      {/* Lista de gastos filtrada */}
       <div className="space-y-4">
-        {filteredIngresos.map((ingreso) => (
+        {filteredGastos.map((gasto) => (
           <div
-            key={ingreso.id}
-            onClick={() => handleIngresoClick(ingreso.id)}
+            key={gasto.id}
+            onClick={() => handleGastoClick(gasto.id)}
             className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-lg shadow-md hover:bg-gray-200 hover:shadow-xl transition-transform transform hover:scale-105 cursor-pointer"
           >
             <div>
-              <h2 className="text-lg font-semibold">{ingreso.description}</h2>
-              <p className="text-sm text-gray-500">{ingreso.date}</p>
+              <h2 className="text-lg font-semibold">{gasto.description}</h2>
+              <p className="text-sm text-gray-500">{gasto.date}</p>
             </div>
             <div>
-              <p className="text-lg font-bold">${ingreso.amount}</p>
+              <p className="text-lg font-bold">${gasto.amount}</p>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Botón de agregar ingreso */}
+      {/* Botón de agregar gasto */}
       <button
-        onClick={() => router.push('/ingresos/add')}
+        onClick={() => router.push('/gastos/add')}
         className="fixed bottom-6 right-6 bg-black text-white p-4 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:bg-gray-800"
       >
         <FaPlus className="text-xl" />
@@ -150,4 +150,4 @@ const IngresosPage = () => {
   );
 };
 
-export default IngresosPage;
+export default GastosPage;
