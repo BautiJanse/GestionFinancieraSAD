@@ -12,12 +12,21 @@ const AddIngreso = () => {
   const [category, setCategory] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [note, setNote] = useState('');
+  const [incomeType, setIncomeType] = useState(''); // Nuevo estado para el tipo de ingreso
 
   const router = useRouter();
 
   const handleAddIngreso = () => {
     // Lógica para manejar el nuevo ingreso (ej. llamada a una API)
-    console.log('Nuevo ingreso:', { description, amount, date, category, paymentMethod, note });
+    console.log('Nuevo ingreso:', {
+      description,
+      amount,
+      date,
+      category,
+      paymentMethod,
+      note,
+      incomeType, // Incluir tipo de ingreso
+    });
 
     // Después de agregar el ingreso, redirigimos de nuevo a la lista de ingresos
     router.push('/ingresos');
@@ -64,6 +73,20 @@ const AddIngreso = () => {
           />
         </div>
 
+        {/* Tipo de Ingreso */}
+        <div className="relative">
+          <label className="block text-black font-bold mb-2">Tipo de Ingreso</label>
+          <select
+            value={incomeType}
+            onChange={(e) => setIncomeType(e.target.value)}
+            className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
+          >
+            <option value="">Seleccione el tipo de ingreso</option>
+            <option value="Recurrente">Recurrente</option>
+            <option value="Único">Único</option>
+          </select>
+        </div>
+
         {/* Categoría */}
         <div className="relative">
           <label className="block text-black font-bold mb-2">Categoría del Ingreso</label>
@@ -81,7 +104,7 @@ const AddIngreso = () => {
           </select>
         </div>
 
-        {/* Método de pago */}
+        {/* Método de Pago */}
         <div className="relative">
           <label className="block text-black font-bold mb-2">Método de Pago</label>
           <select

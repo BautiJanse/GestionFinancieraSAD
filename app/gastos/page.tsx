@@ -10,9 +10,33 @@ const GastosPage = () => {
 
   // Simulación de datos de gastos
   const [gastos, setGastos] = useState([
-    { id: 1, description: 'Compra de alimentos', amount: 100, date: '2024-01-02', category: 'Alimentos' },
-    { id: 2, description: 'Pago de alquiler', amount: 500, date: '2024-02-01', category: 'Alquiler' },
-    { id: 3, description: 'Factura de electricidad', amount: 150, date: '2024-03-10', category: 'Servicios' },
+    {
+      id: 1,
+      description: 'Compra de alimentos',
+      amount: 100,
+      date: '2024-01-02',
+      category: 'Alimentos',
+      expenseType: 'Recurrente',
+      paymentMethod: 'Tarjeta de Crédito',
+    },
+    {
+      id: 2,
+      description: 'Pago de alquiler',
+      amount: 500,
+      date: '2024-02-01',
+      category: 'Alquiler',
+      expenseType: 'Único',
+      paymentMethod: 'Transferencia Bancaria',
+    },
+    {
+      id: 3,
+      description: 'Factura de electricidad',
+      amount: 150,
+      date: '2024-03-10',
+      category: 'Servicios',
+      expenseType: 'Recurrente',
+      paymentMethod: 'Efectivo',
+    },
   ]);
 
   // Estados para los filtros
@@ -22,16 +46,30 @@ const GastosPage = () => {
   const [filterAmountMax, setFilterAmountMax] = useState('');
   const [filterDateStart, setFilterDateStart] = useState('');
   const [filterDateEnd, setFilterDateEnd] = useState('');
+  const [filterExpenseType, setFilterExpenseType] = useState(''); // Nuevo filtro para tipo de gasto
+  const [filterPaymentMethod, setFilterPaymentMethod] = useState(''); // Nuevo filtro para método de pago
 
   // Función para filtrar gastos
   const filteredGastos = gastos.filter((gasto) => {
     const matchesCategory = filterCategory ? gasto.category === filterCategory : true;
     const matchesName = filterName ? gasto.description.toLowerCase().includes(filterName.toLowerCase()) : true;
-    const matchesAmount = (filterAmountMin ? gasto.amount >= parseFloat(filterAmountMin) : true) &&
-                          (filterAmountMax ? gasto.amount <= parseFloat(filterAmountMax) : true);
-    const matchesDate = (filterDateStart ? new Date(gasto.date) >= new Date(filterDateStart) : true) &&
-                        (filterDateEnd ? new Date(gasto.date) <= new Date(filterDateEnd) : true);
-    return matchesCategory && matchesName && matchesAmount && matchesDate;
+    const matchesAmount =
+      (filterAmountMin ? gasto.amount >= parseFloat(filterAmountMin) : true) &&
+      (filterAmountMax ? gasto.amount <= parseFloat(filterAmountMax) : true);
+    const matchesDate =
+      (filterDateStart ? new Date(gasto.date) >= new Date(filterDateStart) : true) &&
+      (filterDateEnd ? new Date(gasto.date) <= new Date(filterDateEnd) : true);
+    const matchesExpenseType = filterExpenseType ? gasto.expenseType === filterExpenseType : true;
+    const matchesPaymentMethod = filterPaymentMethod ? gasto.paymentMethod === filterPaymentMethod : true;
+
+    return (
+      matchesCategory &&
+      matchesName &&
+      matchesAmount &&
+      matchesDate &&
+      matchesExpenseType &&
+      matchesPaymentMethod
+    );
   });
 
   const handleGastoClick = (id: number) => {
@@ -57,6 +95,37 @@ const GastosPage = () => {
             <option value="Alquiler">Alquiler</option>
             <option value="Servicios">Servicios</option>
             <option value="Transporte">Transporte</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        {/* Tipo de Gasto */}
+        <div>
+          <label className="block text-black font-bold mb-2">Tipo de Gasto</label>
+          <select
+            value={filterExpenseType}
+            onChange={(e) => setFilterExpenseType(e.target.value)}
+            className="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
+          >
+            <option value="">Todos</option>
+            <option value="Recurrente">Recurrente</option>
+            <option value="Único">Único</option>
+          </select>
+        </div>
+
+        {/* Método de Pago */}
+        <div>
+          <label className="block text-black font-bold mb-2">Método de Pago</label>
+          <select
+            value={filterPaymentMethod}
+            onChange={(e) => setFilterPaymentMethod(e.target.value)}
+            className="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
+          >
+            <option value="">Todos</option>
+            <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Cheque">Cheque</option>
+            <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
             <option value="Otro">Otro</option>
           </select>
         </div>

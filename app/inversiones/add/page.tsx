@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaCheck } from 'react-icons/fa';
+import { FaCheck, FaPlus, FaTrash } from 'react-icons/fa'; // Importamos nuevos íconos
 
 const AddProyecto = () => {
   const [nombre, setNombre] = useState('');
@@ -22,14 +22,12 @@ const AddProyecto = () => {
 
   // Actualizar cálculos automáticamente al ingresar valores
   useEffect(() => {
-    // Calcular el total de ingresos
     const totalIngresosCalculados = ingresosProyectados.reduce(
       (total, ingreso) => total + (ingreso.monto ? parseFloat(ingreso.monto) : 0),
       0
     );
     setTotalIngresos(totalIngresosCalculados);
 
-    // Calcular ROI
     const roiCalculado = ((totalIngresosCalculados - (costoTotal ? parseFloat(costoTotal) : 0)) / (costoTotal ? parseFloat(costoTotal) : 1)) * 100;
     setRoi(roiCalculado);
 
@@ -47,7 +45,6 @@ const AddProyecto = () => {
   }, [costoTotal, ingresosProyectados]);
 
   const handleAddProyecto = () => {
-    // Lógica para guardar el proyecto (ejemplo simplificado)
     console.log('Nuevo proyecto:', { nombre, descripcion, costoTotal, duracion, fuentesFinanciacion, ingresosProyectados });
     router.push('/inversiones');
   };
@@ -60,6 +57,11 @@ const AddProyecto = () => {
 
   const addIngresoProyectado = () => {
     setIngresosProyectados([...ingresosProyectados, { anio: '', monto: '' }]);
+  };
+
+  const removeIngresoProyectado = (index) => {
+    const newIngresos = ingresosProyectados.filter((_, i) => i !== index);
+    setIngresosProyectados(newIngresos);
   };
 
   return (
@@ -130,7 +132,7 @@ const AddProyecto = () => {
         <div className="relative lg:col-span-2">
           <label className="block text-black font-bold mb-2">Ingresos Proyectados</label>
           {ingresosProyectados.map((ingreso, index) => (
-            <div key={index} className="flex space-x-4 mb-2">
+            <div key={index} className="flex space-x-4 mb-2 items-center">
               <input
                 type="number"
                 placeholder="Año"
@@ -145,23 +147,39 @@ const AddProyecto = () => {
                 onChange={(e) => handleIngresoChange(index, 'monto', e.target.value)}
                 className="w-2/3 p-3 border-2 border-gray-300 rounded-lg focus:border-black transition-all duration-300 text-black"
               />
+              <button
+                type="button"
+                onClick={() => removeIngresoProyectado(index)}
+                className="text-red-500 hover:text-red-700 transition"
+              >
+                <FaTrash />
+              </button>
             </div>
           ))}
           <button
             type="button"
             onClick={addIngresoProyectado}
-            className="text-blue-500 underline"
+            className="mt-2 bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300"
           >
-            Añadir Ingreso Proyectado
+            <FaPlus className="inline mr-2" />
+            Añadir Año
           </button>
         </div>
 
         {/* Resultados de la Simulación */}
-        <div className="relative lg:col-span-2 mt-6 p-4 bg-gray-100 rounded-lg">
-          <h2 className="text-lg font-bold text-black mb-4">Resultados de la Simulación</h2>
-          <p className="text-black">Total de Ingresos Proyectados: ${totalIngresos.toLocaleString()}</p>
-          <p className="text-black">ROI: {roi.toFixed(2)}%</p>
-          <p className="text-black">Período de Recuperación (Payback): {payback}</p>
+        <div className="relative lg:col-span-2 mt-6 p-4 bg-gray-100 rounded-lg grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 bg-white rounded-lg shadow-md">
+            <h3 className="text-lg font-bold text-black">Total Ingresos</h3>
+            <p className="text-2xl text-green-500">${totalIngresos.toLocaleString()}</p>
+          </div>
+          <div className="p-4 bg-white rounded-lg shadow-md">
+            <h3 className="text-lg font-bold text-black">ROI</h3>
+            <p className="text-2xl text-blue-500">{roi.toFixed(2)}%</p>
+          </div>
+          <div className="p-4 bg-white rounded-lg shadow-md">
+            <h3 className="text-lg font-bold text-black">Payback</h3>
+            <p className="text-2xl text-orange-500">{payback}</p>
+          </div>
         </div>
       </form>
 

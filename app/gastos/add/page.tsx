@@ -10,13 +10,23 @@ const AddGasto = () => {
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState('');
   const [category, setCategory] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState(''); // Nuevo estado para el método de pago
+  const [expenseType, setExpenseType] = useState(''); // Nuevo estado para el tipo de gasto
   const [note, setNote] = useState('');
 
   const router = useRouter();
 
   const handleAddGasto = () => {
     // Lógica para manejar el nuevo gasto (ej. llamada a una API)
-    console.log('Nuevo gasto:', { description, amount, date, category, note });
+    console.log('Nuevo gasto:', {
+      description,
+      amount,
+      date,
+      category,
+      paymentMethod,
+      expenseType,
+      note,
+    });
 
     // Después de agregar el gasto, redirigimos de nuevo a la lista de gastos
     router.push('/gastos');
@@ -63,6 +73,20 @@ const AddGasto = () => {
           />
         </div>
 
+        {/* Tipo de Gasto */}
+        <div className="relative">
+          <label className="block text-black font-bold mb-2">Tipo de Gasto</label>
+          <select
+            value={expenseType}
+            onChange={(e) => setExpenseType(e.target.value)}
+            className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
+          >
+            <option value="">Seleccione el tipo de gasto</option>
+            <option value="Recurrente">Recurrente</option>
+            <option value="Único">Único</option>
+          </select>
+        </div>
+
         {/* Categoría */}
         <div className="relative">
           <label className="block text-black font-bold mb-2">Categoría del Gasto</label>
@@ -76,6 +100,23 @@ const AddGasto = () => {
             <option value="Alquiler">Alquiler</option>
             <option value="Servicios">Servicios</option>
             <option value="Transporte">Transporte</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        {/* Método de Pago */}
+        <div className="relative">
+          <label className="block text-black font-bold mb-2">Método de Pago</label>
+          <select
+            value={paymentMethod}
+            onChange={(e) => setPaymentMethod(e.target.value)}
+            className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
+          >
+            <option value="">Seleccione un método de pago</option>
+            <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Cheque">Cheque</option>
+            <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
             <option value="Otro">Otro</option>
           </select>
         </div>

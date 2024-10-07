@@ -7,14 +7,38 @@ import { FaPlus } from 'react-icons/fa';
 
 const IngresosPage = () => {
   const router = useRouter();
-  
+
   // Simulación de datos de ingresos
   const [ingresos, setIngresos] = useState([
-    { id: 1, description: 'Salario', amount: 2000, date: '2024-01-01', category: 'Salario' },
-    { id: 2, description: 'Venta coche', amount: 5000, date: '2024-02-15', category: 'Venta' },
-    { id: 3, description: 'Freelance', amount: 1200, date: '2024-03-10', category: 'Freelance' },
+    {
+      id: 1,
+      description: 'Salario',
+      amount: 2000,
+      date: '2024-01-01',
+      category: 'Salario',
+      incomeType: 'Recurrente',
+      paymentMethod: 'Transferencia Bancaria',
+    },
+    {
+      id: 2,
+      description: 'Venta coche',
+      amount: 5000,
+      date: '2024-02-15',
+      category: 'Venta',
+      incomeType: 'Único',
+      paymentMethod: 'Efectivo',
+    },
+    {
+      id: 3,
+      description: 'Freelance',
+      amount: 1200,
+      date: '2024-03-10',
+      category: 'Freelance',
+      incomeType: 'Recurrente',
+      paymentMethod: 'Cheque',
+    },
   ]);
-  
+
   // Estados para los filtros
   const [filterCategory, setFilterCategory] = useState('');
   const [filterName, setFilterName] = useState('');
@@ -22,16 +46,30 @@ const IngresosPage = () => {
   const [filterAmountMax, setFilterAmountMax] = useState('');
   const [filterDateStart, setFilterDateStart] = useState('');
   const [filterDateEnd, setFilterDateEnd] = useState('');
+  const [filterIncomeType, setFilterIncomeType] = useState(''); // Nuevo filtro para tipo de ingreso
+  const [filterPaymentMethod, setFilterPaymentMethod] = useState(''); // Nuevo filtro para método de pago
 
   // Función para filtrar ingresos
   const filteredIngresos = ingresos.filter((ingreso) => {
     const matchesCategory = filterCategory ? ingreso.category === filterCategory : true;
     const matchesName = filterName ? ingreso.description.toLowerCase().includes(filterName.toLowerCase()) : true;
-    const matchesAmount = (filterAmountMin ? ingreso.amount >= parseFloat(filterAmountMin) : true) &&
-                          (filterAmountMax ? ingreso.amount <= parseFloat(filterAmountMax) : true);
-    const matchesDate = (filterDateStart ? new Date(ingreso.date) >= new Date(filterDateStart) : true) &&
-                        (filterDateEnd ? new Date(ingreso.date) <= new Date(filterDateEnd) : true);
-    return matchesCategory && matchesName && matchesAmount && matchesDate;
+    const matchesAmount =
+      (filterAmountMin ? ingreso.amount >= parseFloat(filterAmountMin) : true) &&
+      (filterAmountMax ? ingreso.amount <= parseFloat(filterAmountMax) : true);
+    const matchesDate =
+      (filterDateStart ? new Date(ingreso.date) >= new Date(filterDateStart) : true) &&
+      (filterDateEnd ? new Date(ingreso.date) <= new Date(filterDateEnd) : true);
+    const matchesIncomeType = filterIncomeType ? ingreso.incomeType === filterIncomeType : true;
+    const matchesPaymentMethod = filterPaymentMethod ? ingreso.paymentMethod === filterPaymentMethod : true;
+
+    return (
+      matchesCategory &&
+      matchesName &&
+      matchesAmount &&
+      matchesDate &&
+      matchesIncomeType &&
+      matchesPaymentMethod
+    );
   });
 
   const handleIngresoClick = (id: number) => {
@@ -57,6 +95,37 @@ const IngresosPage = () => {
             <option value="Freelance">Freelance</option>
             <option value="Inversiones">Inversiones</option>
             <option value="Venta">Venta</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        {/* Tipo de Ingreso */}
+        <div>
+          <label className="block text-black font-bold mb-2">Tipo de Ingreso</label>
+          <select
+            value={filterIncomeType}
+            onChange={(e) => setFilterIncomeType(e.target.value)}
+            className="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
+          >
+            <option value="">Todos</option>
+            <option value="Recurrente">Recurrente</option>
+            <option value="Único">Único</option>
+          </select>
+        </div>
+
+        {/* Método de Pago */}
+        <div>
+          <label className="block text-black font-bold mb-2">Método de Pago</label>
+          <select
+            value={filterPaymentMethod}
+            onChange={(e) => setFilterPaymentMethod(e.target.value)}
+            className="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
+          >
+            <option value="">Todos</option>
+            <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+            <option value="Efectivo">Efectivo</option>
+            <option value="Cheque">Cheque</option>
+            <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
             <option value="Otro">Otro</option>
           </select>
         </div>
