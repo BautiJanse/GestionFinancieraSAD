@@ -9,7 +9,7 @@ const InversionesPage = () => {
   const router = useRouter();
 
   // Simulación de datos de proyectos
-  const [proyectos, setProyectos] = useState([
+  const [proyectos] = useState([
     { id: 1, nombre: 'Ampliación de Estadio', costoTotal: 500000, fechaInicio: '2024-01-01', duracion: 24 },
     { id: 2, nombre: 'Construcción de Gimnasio', costoTotal: 200000, fechaInicio: '2024-06-01', duracion: 12 },
   ]);

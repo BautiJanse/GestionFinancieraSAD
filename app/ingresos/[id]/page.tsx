@@ -2,7 +2,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 // Simulación de datos de ingreso (en un caso real, esto vendría de una API)
 const mockIngresos = [

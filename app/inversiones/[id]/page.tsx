@@ -27,7 +27,19 @@ const mockProyectos = [
 ];
 
 const ProyectoDetail = ({ params }: { params: { id: string } }) => {
-  const [proyecto, setProyecto] = useState<any>(null);
+  
+  interface Proyecto {
+    id: number;
+    nombre: string;
+    descripcion: string;
+    costoTotal: number;
+    duracion: number;
+    fuentesFinanciacion: string;
+    ingresosProyectados: { anio: string, monto: string }[];
+  }
+  
+  const [proyecto, setProyecto] = useState<Proyecto | null>(null);
+
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const router = useRouter();
 

@@ -3,7 +3,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { FaTachometerAlt, FaMoneyBillWave, FaDollarSign, FaChartLine, FaSignOutAlt, FaProjectDiagram } from 'react-icons/fa';
 import { MdOutlineClose } from 'react-icons/md'; // Icono para cerrar más estilizado
 import { FiMenu } from 'react-icons/fi'; // Icono de menú desplegable
