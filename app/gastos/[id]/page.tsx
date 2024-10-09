@@ -11,7 +11,6 @@ const mockGastos = [
     amount: 100,
     date: '2024-01-02',
     category: 'Alimentos',
-    note: 'Compras del supermercado',
   },
   {
     id: 2,
@@ -19,7 +18,6 @@ const mockGastos = [
     amount: 500,
     date: '2024-02-01',
     category: 'Alquiler',
-    note: 'Pago mensual del alquiler del departamento',
   },
   {
     id: 3,
@@ -32,7 +30,18 @@ const mockGastos = [
 ];
 
 const GastoDetail = ({ params }: { params: { id: string } }) => {
-  const [gasto, setGasto] = useState<any>(null);
+  interface Gasto {
+    id: number;
+    description: string;
+    amount: number;
+    date: string;
+    category: string;
+    type: string;
+    paymentMethod: string;
+  }
+  
+  const [gasto, setGasto] = useState<Gasto | null>();
+  
 
   useEffect(() => {
     // Simulación de una API para obtener los detalles del gasto
@@ -79,13 +88,7 @@ const GastoDetail = ({ params }: { params: { id: string } }) => {
           <p className="text-gray-700">{gasto.category}</p>
         </div>
 
-        {/* Nota */}
-        {gasto.note && (
-          <div>
-            <h2 className="text-lg font-semibold">Nota</h2>
-            <p className="text-gray-700">{gasto.note}</p>
-          </div>
-        )}
+        
       </div>
     </div>
   );

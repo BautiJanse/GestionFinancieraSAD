@@ -9,7 +9,7 @@ const GastosPage = () => {
   const router = useRouter();
 
   // Simulación de datos de gastos
-  const [gastos, setGastos] = useState([
+  const [gastos] = useState([
     {
       id: 1,
       description: 'Compra de alimentos',

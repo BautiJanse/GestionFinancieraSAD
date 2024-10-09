@@ -27,11 +27,21 @@ const mockIngresos = [
 ];
 
 const IngresoDetail = ({ params }: { params: { id: string } }) => {
-  const [ingreso, setIngreso] = useState<any>(null);
-
+  interface Ingreso {
+    id: number;
+    description: string;
+    amount: number;
+    date: string;
+    category: string;
+    paymentMethod: string;
+  }
+  
+  const [ingreso, setIngreso] = useState<Ingreso | null>();
+  
   useEffect(() => {
     // Simulación de una API para obtener los detalles del ingreso
     const fetchIngreso = () => {
+      
       const ingresoEncontrado = mockIngresos.find(
         (ingreso) => ingreso.id === parseInt(params.id)
       );
@@ -80,13 +90,7 @@ const IngresoDetail = ({ params }: { params: { id: string } }) => {
           <p className="text-gray-700">{ingreso.paymentMethod}</p>
         </div>
 
-        {/* Nota */}
-        {ingreso.note && (
-          <div>
-            <h2 className="text-lg font-semibold">Nota</h2>
-            <p className="text-gray-700">{ingreso.note}</p>
-          </div>
-        )}
+        
       </div>
     </div>
   );
