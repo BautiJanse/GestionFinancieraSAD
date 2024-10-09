@@ -1,97 +1,72 @@
-// app/gastos/[id]/page.tsx
-'use client';
+import { useState, useEffect } from 'react';
 
-import { useEffect, useState } from 'react';
+interface Gasto {
+  id: number;
+  description: string;
+  amount: number;
+  date: string;
+  category: string;
+  type: string; // Añadir el campo type
+  paymentMethod: string; // Añadir el campo paymentMethod
+  note?: string; // Este campo puede ser opcional
+}
 
-// Simulación de datos de gasto (en un caso real, esto vendría de una API)
-const mockGastos = [
-  {
-    id: 1,
-    description: 'Compra de alimentos',
-    amount: 100,
-    date: '2024-01-02',
-    category: 'Alimentos',
-  },
-  {
-    id: 2,
-    description: 'Pago de alquiler',
-    amount: 500,
-    date: '2024-02-01',
-    category: 'Alquiler',
-  },
-  {
-    id: 3,
-    description: 'Factura de electricidad',
-    amount: 150,
-    date: '2024-03-10',
-    category: 'Servicios',
-    note: 'Pago de factura mensual de electricidad',
-  },
-];
+interface Params {
+  id: string;
+}
 
-const GastoDetail = ({ params }: { params: { id: string } }) => {
-  interface Gasto {
-    id: number;
-    description: string;
-    amount: number;
-    date: string;
-    category: string;
-    type: string;
-    paymentMethod: string;
-  }
-  
-  const [gasto, setGasto] = useState<Gasto | null>();
-  
+const GastoPage = ({ params }: { params: Params }) => {
+  const [gasto, setGasto] = useState<Gasto | null>(null);
 
   useEffect(() => {
-    // Simulación de una API para obtener los detalles del gasto
-    const fetchGasto = () => {
-      const gastoEncontrado = mockGastos.find(
+    const fetchGasto = async () => {
+      const gastos = [
+        {
+          id: 1,
+          description: 'Compra de alimentos',
+          amount: 100,
+          date: '2024-01-01',
+          category: 'Alimentos',
+          type: 'Único',
+          paymentMethod: 'Efectivo',
+          note: 'Compra semanal',
+        },
+        {
+          id: 2,
+          description: 'Pago de alquiler',
+          amount: 500,
+          date: '2024-02-01',
+          category: 'Alquiler',
+          type: 'Recurrente',
+          paymentMethod: 'Transferencia',
+        },
+      ];
+
+      const gastoEncontrado = gastos.find(
         (gasto) => gasto.id === parseInt(params.id)
       );
-      setGasto(gastoEncontrado);
+
+      if (gastoEncontrado) {
+        setGasto(gastoEncontrado);
+      }
     };
 
     fetchGasto();
   }, [params.id]);
 
-  if (!gasto) {
-    return <div className="p-6">Cargando...</div>;
-  }
+  if (!gasto) return <div>Loading...</div>;
 
   return (
-    <div className="p-8 bg-white min-h-screen">
-      <h1 className="text-3xl font-bold text-black mb-8">Detalle del Gasto</h1>
-
-      <div className="space-y-6 text-black">
-        {/* Descripción */}
-        <div>
-          <h2 className="text-lg font-semibold">Descripción</h2>
-          <p className="text-gray-700">{gasto.description}</p>
-        </div>
-
-        {/* Monto */}
-        <div>
-          <h2 className="text-lg font-semibold">Monto</h2>
-          <p className="text-gray-700">${gasto.amount}</p>
-        </div>
-
-        {/* Fecha */}
-        <div>
-          <h2 className="text-lg font-semibold">Fecha del Gasto</h2>
-          <p className="text-gray-700">{gasto.date}</p>
-        </div>
-
-        {/* Categoría */}
-        <div>
-          <h2 className="text-lg font-semibold">Categoría</h2>
-          <p className="text-gray-700">{gasto.category}</p>
-        </div>
-
-        
-      </div>
+    <div>
+      <h1>{gasto.description}</h1>
+      <p>Amount: ${gasto.amount}</p>
+      <p>Date: {gasto.date}</p>
+      <p>Category: {gasto.category}</p>
+      <p>Type: {gasto.type}</p>
+      <p>Payment Method: {gasto.paymentMethod}</p>
+      {gasto.note && <p>Note: {gasto.note}</p>}
     </div>
   );
 };
 
-export default GastoDetail;
+export default GastoPage;
