@@ -28,7 +28,7 @@ const Dashboard = () => {
 
       {/* Gráfica de resultados (Placeholder) */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <iframe title="Tablero Futbol" width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=82c8d459-13a6-4c31-a7aa-a8f62a4b57b9&autoAuth=true&ctid=344979d0-d31d-4c57-8ba0-491aff4acaed" frameborder="0" allowFullScreen="true"></iframe>
+        <iframe title="Tablero Futbol" width="1140" height="541.25" src="https://app.powerbi.com/reportEmbed?reportId=82c8d459-13a6-4c31-a7aa-a8f62a4b57b9&autoAuth=true&ctid=344979d0-d31d-4c57-8ba0-491aff4acaed" ></iframe>
       </div>
     </div>
   );
