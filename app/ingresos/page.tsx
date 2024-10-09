@@ -9,7 +9,7 @@ const IngresosPage = () => {
   const router = useRouter();
 
   // Simulación de datos de ingresos
-  const [ingresos, setIngresos] = useState([
+  const [ingresos] = useState([
     {
       id: 1,
       description: 'Salario',
