@@ -26,20 +26,19 @@ const mockProyectos = [
   },
 ];
 
-const ProyectoDetail = ({ params }: { params: { id: string } }) => {
-  
-  interface Proyecto {
-    id: number;
-    nombre: string;
-    descripcion: string;
-    costoTotal: number;
-    duracion: number;
-    fuentesFinanciacion: string;
-    ingresosProyectados: { anio: string, monto: string }[];
-  }
-  
-  const [proyecto, setProyecto] = useState<Proyecto | null>(null);
+interface Proyecto {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  costoTotal: number;
+  duracion: number;
+  fechaInicio: string;
+  fuentesFinanciacion: { tipo: string; monto: number; tasaInteres?: number; plazo?: number }[];
+  ingresosProyectados: { anio: number; monto: number }[];
+}
 
+const ProyectoDetail = ({ params }: { params: { id: string } }) => {
+  const [proyecto, setProyecto] = useState<Proyecto | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const router = useRouter();
 
@@ -49,7 +48,13 @@ const ProyectoDetail = ({ params }: { params: { id: string } }) => {
       const proyectoEncontrado = mockProyectos.find(
         (proyecto) => proyecto.id === parseInt(params.id)
       );
-      setProyecto(proyectoEncontrado);
+
+      // Verificar si proyectoEncontrado existe antes de asignarlo
+      if (proyectoEncontrado) {
+        setProyecto(proyectoEncontrado);
+      } else {
+        setProyecto(null); // Asignar null si no se encuentra el proyecto
+      }
     };
 
     fetchProyecto();
@@ -70,7 +75,7 @@ const ProyectoDetail = ({ params }: { params: { id: string } }) => {
   for (let i = 0; i < proyecto.ingresosProyectados.length; i++) {
     acumulado += proyecto.ingresosProyectados[i].monto;
     if (acumulado >= proyecto.costoTotal) {
-      payback = proyecto.ingresosProyectados[i].anio;
+      payback = proyecto.ingresosProyectados[i].anio.toString();
       break;
     }
   }
@@ -80,7 +85,6 @@ const ProyectoDetail = ({ params }: { params: { id: string } }) => {
   };
 
   const handleDeleteProyecto = () => {
-    // Lógica para eliminar el proyecto (ejemplo simplificado)
     console.log('Proyecto eliminado:', proyecto.id);
     router.push('/inversiones');
   };
