@@ -52,10 +52,7 @@ const Sidebar = () => {
               <FaMoneyBillWave className="mr-3" /> 
               <Link href="/gastos" onClick={handleLinkClick}>Gastos</Link>
             </li>
-            <li className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400">
-              <FaChartLine className="mr-3" /> 
-              <Link href="/forecast" onClick={handleLinkClick}>Forecast</Link>
-            </li>
+            
             <li className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400">
               <FaProjectDiagram className="mr-3" /> 
               <Link href="/inversiones" onClick={handleLinkClick}>Inversiones</Link>
