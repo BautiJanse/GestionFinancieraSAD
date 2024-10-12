@@ -40,23 +40,23 @@ const Sidebar = () => {
         {/* Menú de navegación */}
         <nav className="flex-1">
           <ul className="space-y-6">
-            <li className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400">
+            <Link className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400" href="/dashboard" onClick={handleLinkClick}>
               <FaTachometerAlt className="mr-3" /> 
-              <Link href="/dashboard" onClick={handleLinkClick}>Dashboard</Link>
-            </li>
-            <li className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400">
+              <h1>Dashboard</h1>
+            </Link>
+            <Link className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400" href="/ingresos" onClick={handleLinkClick}>
               <FaDollarSign className="mr-3" /> 
-              <Link href="/ingresos" onClick={handleLinkClick}>Ingresos</Link>
-            </li>
-            <li className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400">
+              <h1>Ingresos</h1>
+            </Link>
+            <Link className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400" href="/gastos" onClick={handleLinkClick}>
               <FaMoneyBillWave className="mr-3" /> 
-              <Link href="/gastos" onClick={handleLinkClick}>Gastos</Link>
-            </li>
+              <h1>Gastos</h1>
+            </Link>
             
-            <li className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400">
+            <Link className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400" href="/inversiones" onClick={handleLinkClick}>
               <FaProjectDiagram className="mr-3" /> 
-              <Link href="/inversiones" onClick={handleLinkClick}>Inversiones</Link>
-            </li>
+              <h1>Inversiones</h1>
+            </Link>
           </ul>
         </nav>
 
