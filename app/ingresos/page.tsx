@@ -4,11 +4,23 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaPlus } from 'react-icons/fa';
 
+// Definimos la interfaz para un Ingreso
+interface Ingreso {
+  id: number;
+  description: string;
+  amount: number;
+  fecha: string;
+  category: string;
+  metodo_pago: string;
+  nota: string;
+  tipo_ingreso: string;
+}
+
 const IngresosPage = () => {
   const router = useRouter();
 
   // Estados para los ingresos, el estado de carga y errores
-  const [ingresos, setIngresos] = useState([]);
+  const [ingresos, setIngresos] = useState<Ingreso[]>([]); // Definimos el tipo Ingreso[]
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null); // El error es opcional y puede ser null
 
