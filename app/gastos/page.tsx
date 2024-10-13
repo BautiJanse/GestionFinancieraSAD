@@ -4,11 +4,22 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaPlus } from 'react-icons/fa';
 
+// Definir la interfaz para el tipo de Gasto
+interface Gasto {
+  id: number;
+  descripcion: string;
+  monto: number;
+  fecha: string;
+  categoria: string;
+  tipo_gasto: string;
+  metodo_pago: string;
+}
+
 const GastosPage = () => {
   const router = useRouter();
 
   // Estados para los gastos, el estado de carga y errores
-  const [gastos, setGastos] = useState([]);
+  const [gastos, setGastos] = useState<Gasto[]>([]); // Usamos el tipo Gasto
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
