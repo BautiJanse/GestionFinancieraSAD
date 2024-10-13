@@ -10,26 +10,48 @@ const AddIngreso = () => {
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState('');
   const [category, setCategory] = useState('');
+  const [font, setFont] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [note, setNote] = useState('');
   const [incomeType, setIncomeType] = useState(''); // Nuevo estado para el tipo de ingreso
 
   const router = useRouter();
 
-  const handleAddIngreso = () => {
-    // Lógica para manejar el nuevo ingreso (ej. llamada a una API)
-    console.log('Nuevo ingreso:', {
-      description,
-      amount,
-      date,
-      category,
-      paymentMethod,
-      note,
-      incomeType, // Incluir tipo de ingreso
-    });
-
-    // Después de agregar el ingreso, redirigimos de nuevo a la lista de ingresos
-    router.push('/ingresos');
+  const handleAddIngreso = async () => {
+    // Crear el objeto del nuevo ingreso con los datos del formulario
+    const nuevoIngreso = {
+      descripcion: description,
+      monto: parseFloat(amount), // Asegurarse de convertir el monto a número
+      fecha: date,
+      categoria: category,
+      fuente: font,
+      metodo_pago: paymentMethod,
+      nota: note,
+      tipo_ingreso: incomeType, // Incluye tipo de ingreso
+    };
+  
+    try {
+      // Realiza la solicitud POST a la API del backend en Render
+      const response = await fetch('https://back-finanzas.onrender.com/api/ingresos/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(nuevoIngreso), // Enviar los datos como JSON
+      });
+  
+      if (response.ok) {
+        // Si el ingreso se creó correctamente, redirigir a la página de ingresos
+        console.log('Ingreso creado con éxito');
+        router.push('/ingresos'); // Redirigir a la lista de ingresos
+      } else {
+        // Si hubo un error en la respuesta, manejar el error
+        const errorData = await response.json();
+        console.error('Error al crear el ingreso:', errorData);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
   };
 
   return (
@@ -96,6 +118,23 @@ const AddIngreso = () => {
             className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
           >
             <option value="">Seleccione una categoría</option>
+            <option value="Salario">Salario</option>
+            <option value="Freelance">Freelance</option>
+            <option value="Inversiones">Inversiones</option>
+            <option value="Venta">Venta</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        {/* Categoría */}
+        <div className="relative">
+          <label className="block text-black font-bold mb-2">Fuente de Ingreso</label>
+          <select
+            value={font}
+            onChange={(e) => setFont(e.target.value)}
+            className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
+          >
+            <option value="">Seleccione una fuente</option>
             <option value="Salario">Salario</option>
             <option value="Freelance">Freelance</option>
             <option value="Inversiones">Inversiones</option>

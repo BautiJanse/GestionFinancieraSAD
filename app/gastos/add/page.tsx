@@ -1,4 +1,3 @@
-// app/gastos/add/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -10,33 +9,50 @@ const AddGasto = () => {
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState('');
   const [category, setCategory] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState(''); // Nuevo estado para el método de pago
-  const [expenseType, setExpenseType] = useState(''); // Nuevo estado para el tipo de gasto
+  const [destiny, setDestiny] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [expenseType, setExpenseType] = useState('');
   const [note, setNote] = useState('');
 
   const router = useRouter();
 
-  const handleAddGasto = () => {
-    // Lógica para manejar el nuevo gasto (ej. llamada a una API)
-    console.log('Nuevo gasto:', {
-      description,
-      amount,
-      date,
-      category,
-      paymentMethod,
-      expenseType,
-      note,
-    });
+  const handleAddGasto = async () => {
+    const nuevoGasto = {
+      descripcion: description,
+      monto: parseFloat(amount),
+      fecha: date,
+      categoria: category,
+      destino: destiny,
+      metodo_pago: paymentMethod,
+      tipo_gasto: expenseType,
+      nota: note,
+    };
 
-    // Después de agregar el gasto, redirigimos de nuevo a la lista de gastos
-    router.push('/gastos');
+    try {
+      const response = await fetch('https://back-finanzas.onrender.com/api/gastos/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(nuevoGasto),
+      });
+
+      if (response.ok) {
+        console.log('Gasto creado con éxito');
+        router.push('/gastos'); // Redirigir a la lista de gastos
+      } else {
+        const errorData = await response.json();
+        console.error('Error al crear el gasto:', errorData);
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+    }
   };
 
   return (
     <div className="p-8 bg-white min-h-screen">
       <h1 className="text-3xl font-bold text-black mb-8">Agregar Nuevo Gasto</h1>
 
-      {/* Formulario Expandido */}
       <form className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Descripción */}
         <div className="relative">
@@ -104,6 +120,22 @@ const AddGasto = () => {
           </select>
         </div>
 
+        <div className="relative">
+          <label className="block text-black font-bold mb-2">Destino del Gasto</label>
+          <select
+            value={destiny}
+            onChange={(e) => setDestiny(e.target.value)}
+            className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
+          >
+            <option value="">Seleccione un destino</option>
+            <option value="Alimentos">Alimentos</option>
+            <option value="Alquiler">Alquiler</option>
+            <option value="Servicios">Servicios</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
         {/* Método de Pago */}
         <div className="relative">
           <label className="block text-black font-bold mb-2">Método de Pago</label>
@@ -115,8 +147,8 @@ const AddGasto = () => {
             <option value="">Seleccione un método de pago</option>
             <option value="Transferencia Bancaria">Transferencia Bancaria</option>
             <option value="Efectivo">Efectivo</option>
-            <option value="Cheque">Cheque</option>
             <option value="Tarjeta de Crédito">Tarjeta de Crédito</option>
+            <option value="Cheque">Cheque</option>
             <option value="Otro">Otro</option>
           </select>
         </div>

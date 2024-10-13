@@ -1,43 +1,16 @@
-// app/gastos/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaPlus } from 'react-icons/fa';
 
 const GastosPage = () => {
   const router = useRouter();
 
-  // Simulación de datos de gastos
-  const [gastos] = useState([
-    {
-      id: 1,
-      description: 'Compra de alimentos',
-      amount: 100,
-      date: '2024-01-02',
-      category: 'Alimentos',
-      expenseType: 'Recurrente',
-      paymentMethod: 'Tarjeta de Crédito',
-    },
-    {
-      id: 2,
-      description: 'Pago de alquiler',
-      amount: 500,
-      date: '2024-02-01',
-      category: 'Alquiler',
-      expenseType: 'Único',
-      paymentMethod: 'Transferencia Bancaria',
-    },
-    {
-      id: 3,
-      description: 'Factura de electricidad',
-      amount: 150,
-      date: '2024-03-10',
-      category: 'Servicios',
-      expenseType: 'Recurrente',
-      paymentMethod: 'Efectivo',
-    },
-  ]);
+  // Estados para los gastos, el estado de carga y errores
+  const [gastos, setGastos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Estados para los filtros
   const [filterCategory, setFilterCategory] = useState('');
@@ -46,21 +19,41 @@ const GastosPage = () => {
   const [filterAmountMax, setFilterAmountMax] = useState('');
   const [filterDateStart, setFilterDateStart] = useState('');
   const [filterDateEnd, setFilterDateEnd] = useState('');
-  const [filterExpenseType, setFilterExpenseType] = useState(''); // Nuevo filtro para tipo de gasto
-  const [filterPaymentMethod, setFilterPaymentMethod] = useState(''); // Nuevo filtro para método de pago
+  const [filterExpenseType, setFilterExpenseType] = useState(''); // Filtro para tipo de gasto
+  const [filterPaymentMethod, setFilterPaymentMethod] = useState(''); // Filtro para método de pago
+
+  // useEffect para hacer la llamada a la API al montar el componente
+  useEffect(() => {
+    const fetchGastos = async () => {
+      try {
+        const response = await fetch('https://back-finanzas.onrender.com/api/gastos/');
+        if (!response.ok) {
+          throw new Error('Error al obtener los gastos');
+        }
+        const data = await response.json();
+        setGastos(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchGastos();
+  }, []);
 
   // Función para filtrar gastos
   const filteredGastos = gastos.filter((gasto) => {
-    const matchesCategory = filterCategory ? gasto.category === filterCategory : true;
-    const matchesName = filterName ? gasto.description.toLowerCase().includes(filterName.toLowerCase()) : true;
+    const matchesCategory = filterCategory ? gasto.categoria === filterCategory : true;
+    const matchesName = filterName ? gasto.descripcion.toLowerCase().includes(filterName.toLowerCase()) : true;
     const matchesAmount =
-      (filterAmountMin ? gasto.amount >= parseFloat(filterAmountMin) : true) &&
-      (filterAmountMax ? gasto.amount <= parseFloat(filterAmountMax) : true);
+      (filterAmountMin ? gasto.monto >= parseFloat(filterAmountMin) : true) &&
+      (filterAmountMax ? gasto.monto <= parseFloat(filterAmountMax) : true);
     const matchesDate =
-      (filterDateStart ? new Date(gasto.date) >= new Date(filterDateStart) : true) &&
-      (filterDateEnd ? new Date(gasto.date) <= new Date(filterDateEnd) : true);
-    const matchesExpenseType = filterExpenseType ? gasto.expenseType === filterExpenseType : true;
-    const matchesPaymentMethod = filterPaymentMethod ? gasto.paymentMethod === filterPaymentMethod : true;
+      (filterDateStart ? new Date(gasto.fecha) >= new Date(filterDateStart) : true) &&
+      (filterDateEnd ? new Date(gasto.fecha) <= new Date(filterDateEnd) : true);
+    const matchesExpenseType = filterExpenseType ? gasto.tipo_gasto === filterExpenseType : true;
+    const matchesPaymentMethod = filterPaymentMethod ? gasto.metodo_pago === filterPaymentMethod : true;
 
     return (
       matchesCategory &&
@@ -75,6 +68,14 @@ const GastosPage = () => {
   const handleGastoClick = (id: number) => {
     router.push(`/gastos/${id}`);
   };
+
+  if (loading) {
+    return <div className="p-8">Cargando...</div>;
+  }
+
+  if (error) {
+    return <div className="p-8 text-red-500">Error: {error}</div>;
+  }
 
   return (
     <div className="p-8 bg-white min-h-screen">
@@ -198,11 +199,11 @@ const GastosPage = () => {
             className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-lg shadow-md hover:bg-gray-200 hover:shadow-xl transition-transform transform hover:scale-105 cursor-pointer"
           >
             <div>
-              <h2 className="text-lg font-semibold">{gasto.description}</h2>
-              <p className="text-sm text-gray-500">{gasto.date}</p>
+              <h2 className="text-lg font-semibold">{gasto.descripcion}</h2>
+              <p className="text-sm text-gray-500">{gasto.fecha}</p>
             </div>
             <div>
-              <p className="text-lg font-bold">${gasto.amount}</p>
+              <p className="text-lg font-bold">${gasto.monto}</p>
             </div>
           </div>
         ))}
@@ -211,9 +212,9 @@ const GastosPage = () => {
       {/* Botón de agregar gasto */}
       <button
         onClick={() => router.push('/gastos/add')}
-        className="fixed bottom-6 right-6 bg-black text-white p-4 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:bg-gray-800"
+        className="fixed bottom-6 right-6 bg-black text-white p-4 rounded-full shadow-lg hover:bg-gray-800 transition-colors duration-300"
       >
-        <FaPlus className="text-xl" />
+        <FaPlus />
       </button>
     </div>
   );

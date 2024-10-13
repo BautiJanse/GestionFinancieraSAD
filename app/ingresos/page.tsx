@@ -1,43 +1,16 @@
-// app/ingresos/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaPlus } from 'react-icons/fa';
 
 const IngresosPage = () => {
   const router = useRouter();
 
-  // Simulación de datos de ingresos
-  const [ingresos] = useState([
-    {
-      id: 1,
-      description: 'Salario',
-      amount: 2000,
-      date: '2024-01-01',
-      category: 'Salario',
-      incomeType: 'Recurrente',
-      paymentMethod: 'Transferencia Bancaria',
-    },
-    {
-      id: 2,
-      description: 'Venta coche',
-      amount: 5000,
-      date: '2024-02-15',
-      category: 'Venta',
-      incomeType: 'Único',
-      paymentMethod: 'Efectivo',
-    },
-    {
-      id: 3,
-      description: 'Freelance',
-      amount: 1200,
-      date: '2024-03-10',
-      category: 'Freelance',
-      incomeType: 'Recurrente',
-      paymentMethod: 'Cheque',
-    },
-  ]);
+  // Estados para los ingresos, el estado de carga y errores
+  const [ingresos, setIngresos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Estados para los filtros
   const [filterCategory, setFilterCategory] = useState('');
@@ -46,21 +19,41 @@ const IngresosPage = () => {
   const [filterAmountMax, setFilterAmountMax] = useState('');
   const [filterDateStart, setFilterDateStart] = useState('');
   const [filterDateEnd, setFilterDateEnd] = useState('');
-  const [filterIncomeType, setFilterIncomeType] = useState(''); // Nuevo filtro para tipo de ingreso
-  const [filterPaymentMethod, setFilterPaymentMethod] = useState(''); // Nuevo filtro para método de pago
+  const [filterIncomeType, setFilterIncomeType] = useState(''); // Filtro para tipo de ingreso
+  const [filterPaymentMethod, setFilterPaymentMethod] = useState(''); // Filtro para método de pago
+
+  // useEffect para hacer la llamada a la API al montar el componente
+  useEffect(() => {
+    const fetchIngresos = async () => {
+      try {
+        const response = await fetch('https://back-finanzas.onrender.com/api/ingresos/');
+        if (!response.ok) {
+          throw new Error('Error al obtener los ingresos');
+        }
+        const data = await response.json();
+        setIngresos(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchIngresos();
+  }, []);
 
   // Función para filtrar ingresos
   const filteredIngresos = ingresos.filter((ingreso) => {
-    const matchesCategory = filterCategory ? ingreso.category === filterCategory : true;
-    const matchesName = filterName ? ingreso.description.toLowerCase().includes(filterName.toLowerCase()) : true;
+    const matchesCategory = filterCategory ? ingreso.categoria === filterCategory : true;
+    const matchesName = filterName ? ingreso.descripcion.toLowerCase().includes(filterName.toLowerCase()) : true;
     const matchesAmount =
-      (filterAmountMin ? ingreso.amount >= parseFloat(filterAmountMin) : true) &&
-      (filterAmountMax ? ingreso.amount <= parseFloat(filterAmountMax) : true);
+      (filterAmountMin ? ingreso.monto >= parseFloat(filterAmountMin) : true) &&
+      (filterAmountMax ? ingreso.monto <= parseFloat(filterAmountMax) : true);
     const matchesDate =
-      (filterDateStart ? new Date(ingreso.date) >= new Date(filterDateStart) : true) &&
-      (filterDateEnd ? new Date(ingreso.date) <= new Date(filterDateEnd) : true);
-    const matchesIncomeType = filterIncomeType ? ingreso.incomeType === filterIncomeType : true;
-    const matchesPaymentMethod = filterPaymentMethod ? ingreso.paymentMethod === filterPaymentMethod : true;
+      (filterDateStart ? new Date(ingreso.fecha) >= new Date(filterDateStart) : true) &&
+      (filterDateEnd ? new Date(ingreso.fecha) <= new Date(filterDateEnd) : true);
+    const matchesIncomeType = filterIncomeType ? ingreso.tipo_ingreso === filterIncomeType : true;
+    const matchesPaymentMethod = filterPaymentMethod ? ingreso.metodo_pago === filterPaymentMethod : true;
 
     return (
       matchesCategory &&
@@ -75,6 +68,14 @@ const IngresosPage = () => {
   const handleIngresoClick = (id: number) => {
     router.push(`/ingresos/${id}`);
   };
+
+  if (loading) {
+    return <div className="p-8">Cargando...</div>;
+  }
+
+  if (error) {
+    return <div className="p-8 text-red-500">Error: {error}</div>;
+  }
 
   return (
     <div className="p-8 bg-white min-h-screen">
@@ -92,9 +93,8 @@ const IngresosPage = () => {
           >
             <option value="">Todas</option>
             <option value="Salario">Salario</option>
-            <option value="Freelance">Freelance</option>
             <option value="Inversiones">Inversiones</option>
-            <option value="Venta">Venta</option>
+            <option value="Ventas">Ventas</option>
             <option value="Otro">Otro</option>
           </select>
         </div>
@@ -198,11 +198,11 @@ const IngresosPage = () => {
             className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-lg shadow-md hover:bg-gray-200 hover:shadow-xl transition-transform transform hover:scale-105 cursor-pointer"
           >
             <div>
-              <h2 className="text-lg font-semibold">{ingreso.description}</h2>
-              <p className="text-sm text-gray-500">{ingreso.date}</p>
+              <h2 className="text-lg font-semibold">{ingreso.descripcion}</h2>
+              <p className="text-sm text-gray-500">{ingreso.fecha}</p>
             </div>
             <div>
-              <p className="text-lg font-bold">${ingreso.amount}</p>
+              <p className="text-lg font-bold">${ingreso.monto}</p>
             </div>
           </div>
         ))}
