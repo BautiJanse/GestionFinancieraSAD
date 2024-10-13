@@ -26,14 +26,15 @@ const GastosPage = () => {
   useEffect(() => {
     const fetchGastos = async () => {
       try {
-        const response = await fetch('https://back-finanzas.onrender.com/api/gastos/');
-        if (!response.ok) {
-          throw new Error('Error al obtener los gastos');
-        }
+        const response = await fetch('https://back-finanzas.onrender.com/api/gastos');
         const data = await response.json();
         setGastos(data);
-      } catch (error) {
-        setError(error.message);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('Error desconocido');
+        }
       } finally {
         setLoading(false);
       }
