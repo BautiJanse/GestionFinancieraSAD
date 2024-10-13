@@ -21,13 +21,16 @@ const IngresoDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // useEffect para obtener los detalles del ingreso por ID desde la API
   useEffect(() => {
+    // Log para asegurarnos de que el id sea correcto
+    console.log('Fetching ingreso with ID:', params.id);
+
     const fetchIngreso = async () => {
       try {
         const response = await fetch(`https://back-finanzas.onrender.com/api/ingresos/${params.id}`);
 
         if (!response.ok) {
+          console.error('API request failed:', response.statusText);
           throw new Error('Error al obtener los detalles del ingreso');
         }
 
@@ -35,6 +38,7 @@ const IngresoDetail = () => {
         setIngreso(data); // Guardar los detalles del ingreso
       } catch (error) {
         if (error instanceof Error) {
+          console.error('Fetch error:', error);
           setError(error.message);
         } else {
           setError('Error desconocido');
