@@ -10,7 +10,7 @@ const IngresosPage = () => {
   // Estados para los ingresos, el estado de carga y errores
   const [ingresos, setIngresos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null); // El error es opcional y puede ser null
 
   // Estados para los filtros
   const [filterCategory, setFilterCategory] = useState('');
@@ -32,8 +32,12 @@ const IngresosPage = () => {
         }
         const data = await response.json();
         setIngresos(data);
-      } catch (error) {
-        setError(error.message);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          setError(error.message); // TypeScript sabe que 'error' tiene una propiedad 'message'
+        } else {
+          setError('Error desconocido');
+        }
       } finally {
         setLoading(false);
       }
@@ -174,4 +178,3 @@ const IngresosPage = () => {
 };
 
 export default IngresosPage;
-    
