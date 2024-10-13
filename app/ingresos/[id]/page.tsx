@@ -3,12 +3,23 @@
 import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+interface Ingreso {
+  id: number;
+  description: string;
+  amount: number;
+  fecha: string;
+  category: string;
+  metodo_pago: string;
+  nota?: string;
+  tipo_ingreso: string;
+}
+
 const IngresoDetail = () => {
   const router = useRouter();
   const params = useParams(); // Obtener el ID de la URL
-  const [ingreso, setIngreso] = useState(null);
+  const [ingreso, setIngreso] = useState<Ingreso | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   // useEffect para obtener los detalles del ingreso por ID desde la API
   useEffect(() => {
@@ -23,6 +34,11 @@ const IngresoDetail = () => {
         const data = await response.json();
         setIngreso(data); // Guardar los detalles del ingreso
       } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('Error desconocido');
+        }
       } finally {
         setLoading(false);
       }
@@ -39,6 +55,10 @@ const IngresoDetail = () => {
     return <div className="p-8 text-red-500">Error: {error}</div>;
   }
 
+  if (!ingreso) {
+    return <div className="p-8">Ingreso no encontrado.</div>;
+  }
+
   return (
     <div className="p-8 bg-white min-h-screen">
       <h1 className="text-3xl font-bold text-black mb-8">Detalle del Ingreso</h1>
@@ -49,7 +69,7 @@ const IngresoDetail = () => {
         <p><strong>Fecha:</strong> {ingreso.fecha}</p>
         <p><strong>Categoría:</strong> {ingreso.category}</p>
         <p><strong>Método de Pago:</strong> {ingreso.metodo_pago}</p>
-        <p><strong>Nota:</strong> {ingreso.nota}</p>
+        <p><strong>Nota:</strong> {ingreso.nota || 'No hay nota disponible'}</p>
         <p><strong>Tipo de Ingreso:</strong> {ingreso.tipo_ingreso}</p>
       </div>
 
