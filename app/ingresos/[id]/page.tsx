@@ -23,7 +23,6 @@ const IngresoDetail = () => {
         const data = await response.json();
         setIngreso(data); // Guardar los detalles del ingreso
       } catch (error) {
-        setError(error.message);
       } finally {
         setLoading(false);
       }
