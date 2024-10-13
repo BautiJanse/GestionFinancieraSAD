@@ -9,7 +9,7 @@ interface Ingreso {
   id: number;
   description: string;
   amount: number;
-  fecha: string;
+  date: string;
   category: string;
   metodo_pago: string;
   nota: string;
@@ -66,8 +66,8 @@ const IngresosPage = () => {
       (filterAmountMin ? ingreso.amount >= parseFloat(filterAmountMin) : true) &&
       (filterAmountMax ? ingreso.amount <= parseFloat(filterAmountMax) : true);
     const matchesDate =
-      (filterDateStart ? new Date(ingreso.fecha) >= new Date(filterDateStart) : true) &&
-      (filterDateEnd ? new Date(ingreso.fecha) <= new Date(filterDateEnd) : true);
+      (filterDateStart ? new Date(ingreso.date) >= new Date(filterDateStart) : true) &&
+      (filterDateEnd ? new Date(ingreso.date) <= new Date(filterDateEnd) : true);
     const matchesIncomeType = filterIncomeType ? ingreso.tipo_ingreso === filterIncomeType : true;
     const matchesPaymentMethod = filterPaymentMethod ? ingreso.metodo_pago === filterPaymentMethod : true;
 
@@ -169,7 +169,7 @@ const IngresosPage = () => {
           >
             <div>
               <h2 className="text-lg font-semibold">{ingreso.description}</h2>
-              <p className="text-sm text-gray-500">{ingreso.fecha}</p>
+              <p className="text-sm text-gray-500"> {new Date(ingreso.date).toLocaleDateString('es-AR')}</p>
             </div>
             <div>
               <p className="text-lg font-bold">${ingreso.amount}</p>

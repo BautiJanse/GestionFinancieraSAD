@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaCheck } from 'react-icons/fa'; // Icono para el botón
+import { FaCheck, FaArrowLeft } from 'react-icons/fa'; // Icono para el botón
 
 const AddGasto = () => {
   const [description, setDescription] = useState('');
@@ -11,20 +11,19 @@ const AddGasto = () => {
   const [category, setCategory] = useState('');
   const [destiny, setDestiny] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
-  const [expenseType, setExpenseType] = useState('');
+  const [type, setExpenseType] = useState('');
   const [note, setNote] = useState('');
 
   const router = useRouter();
 
   const handleAddGasto = async () => {
     const nuevoGasto = {
-      descripcion: description,
-      monto: parseFloat(amount),
+      description: description,
+      amount: parseFloat(amount),
       fecha: date,
-      categoria: category,
-      destino: destiny,
-      metodo_pago: paymentMethod,
-      tipo_gasto: expenseType,
+      category: category,
+      paymentMethod: paymentMethod,
+      type: type,
       nota: note,
     };
 
@@ -93,7 +92,7 @@ const AddGasto = () => {
         <div className="relative">
           <label className="block text-black font-bold mb-2">Tipo de Gasto</label>
           <select
-            value={expenseType}
+            value={type}
             onChange={(e) => setExpenseType(e.target.value)}
             className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
           >
@@ -168,7 +167,7 @@ const AddGasto = () => {
       {/* Botón de Crear Gasto */}
       <button
         onClick={handleAddGasto}
-        className="fixed bottom-6 right-6 bg-black text-white p-4 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:bg-gray-800"
+        className="mt-5 bottom-6 right-6 bg-black text-white p-4 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:bg-gray-800"
       >
         <FaCheck className="mr-2" />
         Crear Gasto

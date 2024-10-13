@@ -7,12 +7,12 @@ import { FaPlus } from 'react-icons/fa';
 // Definir la interfaz para el tipo de Gasto
 interface Gasto {
   id: number;
-  descripcion: string;
-  monto: number;
-  fecha: string;
-  categoria: string;
-  tipo_gasto: string;
-  metodo_pago: string;
+  description: string;
+  amount: number;
+  date: string;
+  category: string;
+  type: string;
+  paymentMethod: string;
 }
 
 const GastosPage = () => {
@@ -56,16 +56,16 @@ const GastosPage = () => {
 
   // Función para filtrar gastos
   const filteredGastos = gastos.filter((gasto) => {
-    const matchesCategory = filterCategory ? gasto.categoria === filterCategory : true;
-    const matchesName = filterName ? gasto.descripcion.toLowerCase().includes(filterName.toLowerCase()) : true;
+    const matchesCategory = filterCategory ? gasto.category === filterCategory : true;
+    const matchesName = filterName ? gasto.description.toLowerCase().includes(filterName.toLowerCase()) : true;
     const matchesAmount =
-      (filterAmountMin ? gasto.monto >= parseFloat(filterAmountMin) : true) &&
-      (filterAmountMax ? gasto.monto <= parseFloat(filterAmountMax) : true);
+      (filterAmountMin ? gasto.amount >= parseFloat(filterAmountMin) : true) &&
+      (filterAmountMax ? gasto.amount <= parseFloat(filterAmountMax) : true);
     const matchesDate =
-      (filterDateStart ? new Date(gasto.fecha) >= new Date(filterDateStart) : true) &&
-      (filterDateEnd ? new Date(gasto.fecha) <= new Date(filterDateEnd) : true);
-    const matchesExpenseType = filterExpenseType ? gasto.tipo_gasto === filterExpenseType : true;
-    const matchesPaymentMethod = filterPaymentMethod ? gasto.metodo_pago === filterPaymentMethod : true;
+      (filterDateStart ? new Date(gasto.date) >= new Date(filterDateStart) : true) &&
+      (filterDateEnd ? new Date(gasto.date) <= new Date(filterDateEnd) : true);
+    const matchesExpenseType = filterExpenseType ? gasto.type === filterExpenseType : true;
+    const matchesPaymentMethod = filterPaymentMethod ? gasto.paymentMethod === filterPaymentMethod : true;
 
     return (
       matchesCategory &&
@@ -211,11 +211,11 @@ const GastosPage = () => {
             className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-lg shadow-md hover:bg-gray-200 hover:shadow-xl transition-transform transform hover:scale-105 cursor-pointer"
           >
             <div>
-              <h2 className="text-lg font-semibold">{gasto.descripcion}</h2>
-              <p className="text-sm text-gray-500">{gasto.fecha}</p>
+              <h2 className="text-lg font-semibold">{gasto.description}</h2>
+              <p className="text-sm text-gray-500"> {new Date(gasto.date).toLocaleDateString('es-AR')}</p>
             </div>
             <div>
-              <p className="text-lg font-bold">${gasto.monto}</p>
+              <p className="text-lg font-bold">${gasto.amount}</p>
             </div>
           </div>
         ))}

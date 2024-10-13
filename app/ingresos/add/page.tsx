@@ -2,16 +2,16 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaCheck } from 'react-icons/fa'; // Icono para el botón
+import { FaCheck, FaArrowLeft } from 'react-icons/fa'; // Icono para el botón
 
 const AddIngreso = () => {
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState(''); 
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState('');
   const [category, setCategory] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [note, setNote] = useState('');
-  const [incomeType, setIncomeType] = useState(''); // Nuevo estado para el tipo de ingreso
+  const [tipo_ingreso, setIncomeType] = useState(''); // Nuevo estado para el tipo de ingreso
 
   const router = useRouter();
 
@@ -22,9 +22,9 @@ const AddIngreso = () => {
       amount: parseFloat(amount), // Asegurarse de convertir el monto a número
       fecha: date,
       category: category,
-      metodo_pago: paymentMethod,
+      paymentMethod: paymentMethod,     
+      tipo_ingreso: tipo_ingreso, // Incluye tipo de ingreso
       nota: note,
-      tipo_ingreso: incomeType, // Incluye tipo de ingreso
     };
   
     try {
@@ -96,7 +96,7 @@ const AddIngreso = () => {
         <div className="relative">
           <label className="block text-black font-bold mb-2">Tipo de Ingreso</label>
           <select
-            value={incomeType}
+            value={tipo_ingreso}
             onChange={(e) => setIncomeType(e.target.value)}
             className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
           >
@@ -160,6 +160,15 @@ const AddIngreso = () => {
         <FaCheck className="mr-2" />
         Crear Ingreso
       </button>
+
+      <button
+        onClick={() => router.back()}
+        className="mt-5 bottom-6 right-6 bg-black text-white p-4 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:bg-gray-800"
+      >
+         <FaArrowLeft className="mr-2" />
+        Volver
+      </button>
+
     </div>
   );
 };

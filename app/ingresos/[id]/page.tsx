@@ -2,14 +2,16 @@
 
 import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { FaCheck, FaArrowLeft } from 'react-icons/fa'; // Icono para el botón
+
 
 interface Ingreso {
   id: number;
   description: string;
   amount: number;
-  fecha: string;
+  date: string;
   category: string;
-  metodo_pago: string;
+  paymentMethod: string;
   nota?: string;
   tipo_ingreso: string;
 }
@@ -64,23 +66,25 @@ const IngresoDetail = () => {
   }
 
   return (
-    <div className="p-8 bg-white min-h-screen">
+    <div className="p-10 bg-white min-h-screen">
       <h1 className="text-3xl font-bold text-black mb-8">Detalle del Ingreso</h1>
 
       <div className="bg-gray-100 p-4 rounded-lg">
-        <p><strong>Descripción:</strong> {ingreso.description}</p>
-        <p><strong>Monto:</strong> ${ingreso.amount}</p>
-        <p><strong>Fecha:</strong> {ingreso.fecha}</p>
-        <p><strong>Categoría:</strong> {ingreso.category}</p>
-        <p><strong>Método de Pago:</strong> {ingreso.metodo_pago}</p>
-        <p><strong>Nota:</strong> {ingreso.nota || 'No hay nota disponible'}</p>
-        <p><strong>Tipo de Ingreso:</strong> {ingreso.tipo_ingreso}</p>
+      <h1 className="text-2xl font-bold mb-3"> {ingreso.description}</h1>
+      <p className="mb-3"><strong>Monto:</strong> ${ingreso.amount}</p>
+      <p className="mb-3"><strong>Fecha:</strong> {new Date(ingreso.date).toLocaleDateString('es-AR')}</p>
+      <p className="mb-3"><strong>Categoría:</strong> {ingreso.category}</p>
+      <p className="mb-3"><strong>Método de Pago:</strong> {ingreso.paymentMethod}</p>
+      <p className="mb-3"><strong>Nota:</strong> {ingreso.nota || 'No hay nota disponible'}</p>
+      <p className="mb-3"><strong>Tipo de Ingreso:</strong> {ingreso.tipo_ingreso}</p>
+
       </div>
 
       <button
         onClick={() => router.back()}
-        className="mt-4 bg-black text-white p-3 rounded-lg shadow-md hover:bg-gray-800 transition-all duration-300"
+        className="mt-5 bottom-6 right-6 bg-black text-white p-4 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:bg-gray-800"
       >
+        <FaArrowLeft className="mr-2" />
         Volver
       </button>
     </div>
