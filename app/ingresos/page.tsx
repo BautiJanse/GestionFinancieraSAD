@@ -44,11 +44,11 @@ const IngresosPage = () => {
 
   // Función para filtrar ingresos
   const filteredIngresos = ingresos.filter((ingreso) => {
-    const matchesCategory = filterCategory ? ingreso.categoria === filterCategory : true;
-    const matchesName = filterName ? ingreso.descripcion.toLowerCase().includes(filterName.toLowerCase()) : true;
+    const matchesCategory = filterCategory ? ingreso.category === filterCategory : true;
+    const matchesName = filterName ? ingreso.description.toLowerCase().includes(filterName.toLowerCase()) : true;
     const matchesAmount =
-      (filterAmountMin ? ingreso.monto >= parseFloat(filterAmountMin) : true) &&
-      (filterAmountMax ? ingreso.monto <= parseFloat(filterAmountMax) : true);
+      (filterAmountMin ? ingreso.amount >= parseFloat(filterAmountMin) : true) &&
+      (filterAmountMax ? ingreso.amount <= parseFloat(filterAmountMax) : true);
     const matchesDate =
       (filterDateStart ? new Date(ingreso.fecha) >= new Date(filterDateStart) : true) &&
       (filterDateEnd ? new Date(ingreso.fecha) <= new Date(filterDateEnd) : true);
@@ -141,52 +141,6 @@ const IngresosPage = () => {
             placeholder="Buscar por nombre"
           />
         </div>
-
-        {/* Monto mínimo */}
-        <div>
-          <label className="block text-black font-bold mb-2">Monto mínimo</label>
-          <input
-            type="number"
-            value={filterAmountMin}
-            onChange={(e) => setFilterAmountMin(e.target.value)}
-            className="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
-            placeholder="Monto mínimo"
-          />
-        </div>
-
-        {/* Monto máximo */}
-        <div>
-          <label className="block text-black font-bold mb-2">Monto máximo</label>
-          <input
-            type="number"
-            value={filterAmountMax}
-            onChange={(e) => setFilterAmountMax(e.target.value)}
-            className="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
-            placeholder="Monto máximo"
-          />
-        </div>
-
-        {/* Fecha inicio */}
-        <div>
-          <label className="block text-black font-bold mb-2">Fecha desde</label>
-          <input
-            type="date"
-            value={filterDateStart}
-            onChange={(e) => setFilterDateStart(e.target.value)}
-            className="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
-          />
-        </div>
-
-        {/* Fecha fin */}
-        <div>
-          <label className="block text-black font-bold mb-2">Fecha hasta</label>
-          <input
-            type="date"
-            value={filterDateEnd}
-            onChange={(e) => setFilterDateEnd(e.target.value)}
-            className="w-full p-2 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
-          />
-        </div>
       </div>
 
       {/* Lista de ingresos filtrada */}
@@ -198,11 +152,11 @@ const IngresosPage = () => {
             className="flex justify-between items-center bg-gray-100 text-black p-4 rounded-lg shadow-md hover:bg-gray-200 hover:shadow-xl transition-transform transform hover:scale-105 cursor-pointer"
           >
             <div>
-              <h2 className="text-lg font-semibold">{ingreso.descripcion}</h2>
+              <h2 className="text-lg font-semibold">{ingreso.description}</h2>
               <p className="text-sm text-gray-500">{ingreso.fecha}</p>
             </div>
             <div>
-              <p className="text-lg font-bold">${ingreso.monto}</p>
+              <p className="text-lg font-bold">${ingreso.amount}</p>
             </div>
           </div>
         ))}
@@ -220,3 +174,4 @@ const IngresosPage = () => {
 };
 
 export default IngresosPage;
+    

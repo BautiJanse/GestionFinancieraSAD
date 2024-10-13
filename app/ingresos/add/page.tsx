@@ -1,4 +1,3 @@
-// app/ingresos/add/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -10,7 +9,6 @@ const AddIngreso = () => {
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState('');
   const [category, setCategory] = useState('');
-  const [font, setFont] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [note, setNote] = useState('');
   const [incomeType, setIncomeType] = useState(''); // Nuevo estado para el tipo de ingreso
@@ -20,11 +18,10 @@ const AddIngreso = () => {
   const handleAddIngreso = async () => {
     // Crear el objeto del nuevo ingreso con los datos del formulario
     const nuevoIngreso = {
-      descripcion: description,
-      monto: parseFloat(amount), // Asegurarse de convertir el monto a número
+      description: description,
+      amount: parseFloat(amount), // Asegurarse de convertir el monto a número
       fecha: date,
-      categoria: category,
-      fuente: font,
+      category: category,
       metodo_pago: paymentMethod,
       nota: note,
       tipo_ingreso: incomeType, // Incluye tipo de ingreso
@@ -118,23 +115,6 @@ const AddIngreso = () => {
             className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
           >
             <option value="">Seleccione una categoría</option>
-            <option value="Salario">Salario</option>
-            <option value="Freelance">Freelance</option>
-            <option value="Inversiones">Inversiones</option>
-            <option value="Venta">Venta</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-
-        {/* Categoría */}
-        <div className="relative">
-          <label className="block text-black font-bold mb-2">Fuente de Ingreso</label>
-          <select
-            value={font}
-            onChange={(e) => setFont(e.target.value)}
-            className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
-          >
-            <option value="">Seleccione una fuente</option>
             <option value="Salario">Salario</option>
             <option value="Freelance">Freelance</option>
             <option value="Inversiones">Inversiones</option>

@@ -1,97 +1,65 @@
-// app/ingresos/[id]/page.tsx
 'use client';
 
+import { useRouter, useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-// Simulación de datos de ingreso (en un caso real, esto vendría de una API)
-const mockIngresos = [
-  {
-    id: 1,
-    description: 'Salario',
-    amount: 2000,
-    date: '2024-01-01',
-    category: 'Salario',
-    paymentMethod: 'Transferencia Bancaria',
-    note: 'Salario mensual de enero',
-  },
-  {
-    id: 2,
-    description: 'Venta de coche',
-    amount: 5000,
-    date: '2024-02-15',
-    category: 'Venta',
-    paymentMethod: 'Efectivo',
-    note: 'Venta de coche usado',
-  },
-  // Puedes agregar más datos de prueba aquí
-];
+const IngresoDetail = () => {
+  const router = useRouter();
+  const params = useParams(); // Obtener el ID de la URL
+  const [ingreso, setIngreso] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-const IngresoDetail = ({ params }: { params: { id: string } }) => {
-  interface Ingreso {
-    id: number;
-    description: string;
-    amount: number;
-    date: string;
-    category: string;
-    paymentMethod: string;
-  }
-  
-  const [ingreso, setIngreso] = useState<Ingreso | null>();
-  
+  // useEffect para obtener los detalles del ingreso por ID desde la API
   useEffect(() => {
-    // Simulación de una API para obtener los detalles del ingreso
-    const fetchIngreso = () => {
-      
-      const ingresoEncontrado = mockIngresos.find(
-        (ingreso) => ingreso.id === parseInt(params.id)
-      );
-      setIngreso(ingresoEncontrado);
+    const fetchIngreso = async () => {
+      try {
+        const response = await fetch(`https://back-finanzas.onrender.com/api/ingresos/${params.id}`);
+
+        if (!response.ok) {
+          throw new Error('Error al obtener los detalles del ingreso');
+        }
+
+        const data = await response.json();
+        setIngreso(data); // Guardar los detalles del ingreso
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchIngreso();
   }, [params.id]);
 
-  if (!ingreso) {
-    return <div className="p-6">Cargando...</div>;
+  if (loading) {
+    return <div className="p-8">Cargando detalles del ingreso...</div>;
+  }
+
+  if (error) {
+    return <div className="p-8 text-red-500">Error: {error}</div>;
   }
 
   return (
     <div className="p-8 bg-white min-h-screen">
       <h1 className="text-3xl font-bold text-black mb-8">Detalle del Ingreso</h1>
 
-      <div className="space-y-6 text-black">
-        {/* Descripción */}
-        <div>
-          <h2 className="text-lg font-semibold">Descripción</h2>
-          <p className="text-gray-700">{ingreso.description}</p>
-        </div>
-
-        {/* Monto */}
-        <div>
-          <h2 className="text-lg font-semibold">Monto</h2>
-          <p className="text-gray-700">${ingreso.amount}</p>
-        </div>
-
-        {/* Fecha */}
-        <div>
-          <h2 className="text-lg font-semibold">Fecha del Ingreso</h2>
-          <p className="text-gray-700">{ingreso.date}</p>
-        </div>
-
-        {/* Categoría */}
-        <div>
-          <h2 className="text-lg font-semibold">Categoría</h2>
-          <p className="text-gray-700">{ingreso.category}</p>
-        </div>
-
-        {/* Método de pago */}
-        <div>
-          <h2 className="text-lg font-semibold">Método de Pago</h2>
-          <p className="text-gray-700">{ingreso.paymentMethod}</p>
-        </div>
-
-        
+      <div className="bg-gray-100 p-4 rounded-lg">
+        <p><strong>Descripción:</strong> {ingreso.description}</p>
+        <p><strong>Monto:</strong> ${ingreso.amount}</p>
+        <p><strong>Fecha:</strong> {ingreso.fecha}</p>
+        <p><strong>Categoría:</strong> {ingreso.category}</p>
+        <p><strong>Método de Pago:</strong> {ingreso.metodo_pago}</p>
+        <p><strong>Nota:</strong> {ingreso.nota}</p>
+        <p><strong>Tipo de Ingreso:</strong> {ingreso.tipo_ingreso}</p>
       </div>
+
+      <button
+        onClick={() => router.back()}
+        className="mt-4 bg-black text-white p-3 rounded-lg shadow-md hover:bg-gray-800 transition-all duration-300"
+      >
+        Volver
+      </button>
     </div>
   );
 };
