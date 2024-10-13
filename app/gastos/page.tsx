@@ -10,7 +10,7 @@ const GastosPage = () => {
   // Estados para los gastos, el estado de carga y errores
   const [gastos, setGastos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   // Estados para los filtros
   const [filterCategory, setFilterCategory] = useState('');
