@@ -110,7 +110,7 @@ const AddGasto = () => {
             className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
           >
             <option value="">Seleccione una categoría</option>
-            <option value="Alimentos">Alimentos</option>
+            <option value="Mantenimiento">Mantenimiento</option>
             <option value="Alquiler">Alquiler</option>
             <option value="Servicios">Servicios</option>
             <option value="Transporte">Transporte</option>
