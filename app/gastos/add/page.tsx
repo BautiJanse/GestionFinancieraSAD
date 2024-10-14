@@ -9,7 +9,6 @@ const AddGasto = () => {
   const [amount, setAmount] = useState('');
   const [date, setDate] = useState('');
   const [category, setCategory] = useState('');
-  const [destiny, setDestiny] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [type, setExpenseType] = useState('');
   const [note, setNote] = useState('');
@@ -20,7 +19,7 @@ const AddGasto = () => {
     const nuevoGasto = {
       description: description,
       amount: parseFloat(amount),
-      fecha: date,
+      date: date,
       category: category,
       paymentMethod: paymentMethod,
       type: type,
@@ -111,22 +110,6 @@ const AddGasto = () => {
             className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
           >
             <option value="">Seleccione una categoría</option>
-            <option value="Alimentos">Alimentos</option>
-            <option value="Alquiler">Alquiler</option>
-            <option value="Servicios">Servicios</option>
-            <option value="Transporte">Transporte</option>
-            <option value="Otro">Otro</option>
-          </select>
-        </div>
-
-        <div className="relative">
-          <label className="block text-black font-bold mb-2">Destino del Gasto</label>
-          <select
-            value={destiny}
-            onChange={(e) => setDestiny(e.target.value)}
-            className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black focus:outline-none transition-all duration-300 text-black"
-          >
-            <option value="">Seleccione un destino</option>
             <option value="Alimentos">Alimentos</option>
             <option value="Alquiler">Alquiler</option>
             <option value="Servicios">Servicios</option>

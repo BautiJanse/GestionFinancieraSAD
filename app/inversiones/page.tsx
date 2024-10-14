@@ -1,22 +1,59 @@
-// app/inversiones/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { FaPlus } from 'react-icons/fa';
+
+interface Proyecto {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  costo_total: number;
+  duracion: number;
+}
 
 const InversionesPage = () => {
   const router = useRouter();
 
-  // Simulación de datos de proyectos
-  const [proyectos] = useState([
-    { id: 1, nombre: 'Ampliación de Estadio', costoTotal: 500000, fechaInicio: '2024-01-01', duracion: 24 },
-    { id: 2, nombre: 'Construcción de Gimnasio', costoTotal: 200000, fechaInicio: '2024-06-01', duracion: 12 },
-  ]);
+  const [proyectos, setProyectos] = useState<Proyecto[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch para obtener los proyectos de inversión desde la API
+  const fetchProyectos = async () => {
+    try {
+      const response = await fetch('https://back-finanzas.onrender.com/api/proyectos/');
+      if (!response.ok) {
+        throw new Error('Error al obtener los proyectos de inversión');
+      }
+      const data = await response.json();
+      setProyectos(data); // Suponiendo que el API devuelve un array de proyectos
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Error desconocido');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProyectos();
+  }, []);
 
   const handleProyectoClick = (id: number) => {
     router.push(`/inversiones/${id}`);
   };
+
+  if (loading) {
+    return <div className="p-8">Cargando proyectos...</div>;
+  }
+
+  if (error) {
+    return <div className="p-8 text-red-500">Error: {error}</div>;
+  }
 
   return (
     <div className="p-8 bg-white min-h-screen">
@@ -32,11 +69,11 @@ const InversionesPage = () => {
           >
             <div>
               <h2 className="text-2xl font-semibold">{proyecto.nombre}</h2>
-              <p className="text-sm text-gray-500 mt-2">Fecha de inicio: {proyecto.fechaInicio}</p>
+              <p className="text-sm text-gray-500 mt-2">{proyecto.descripcion}</p>
               <p className="text-sm text-gray-500">Duración: {proyecto.duracion} meses</p>
             </div>
             <div className="mt-4 lg:mt-0 lg:text-right">
-              <p className="text-lg font-bold text-green-600">Inversión Total: ${proyecto.costoTotal.toLocaleString()}</p>
+              <p className="text-lg font-bold text-green-600">Inversión Total: ${proyecto.costo_total.toLocaleString()}</p>
             </div>
           </div>
         ))}

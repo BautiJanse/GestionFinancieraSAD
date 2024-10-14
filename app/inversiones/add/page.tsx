@@ -1,11 +1,9 @@
-// app/inversiones/add/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaCheck, FaPlus, FaTrash } from 'react-icons/fa'; // Importamos nuevos íconos
+import { FaCheck, FaPlus, FaTrash, FaArrowLeft } from 'react-icons/fa';
 
-// Definimos el tipo de datos para los ingresos proyectados
 interface IngresoProyectado {
   anio: number;
   monto: number;
@@ -16,17 +14,14 @@ const AddProyecto = () => {
   const [descripcion, setDescripcion] = useState('');
   const [costoTotal, setCostoTotal] = useState('');
   const [duracion, setDuracion] = useState('');
-  const [fuentesFinanciacion, setFuentesFinanciacion] = useState('');
   const [ingresosProyectados, setIngresosProyectados] = useState<IngresoProyectado[]>([{ anio: 0, monto: 0 }]);
 
-  // Estados para cálculos automáticos
   const [roi, setRoi] = useState(0);
   const [payback, setPayback] = useState('');
   const [totalIngresos, setTotalIngresos] = useState(0);
 
   const router = useRouter();
 
-  // Actualizar cálculos automáticamente al ingresar valores
   useEffect(() => {
     const totalIngresosCalculados = ingresosProyectados.reduce(
       (total, ingreso) => total + ingreso.monto,
@@ -37,9 +32,9 @@ const AddProyecto = () => {
     const costo = costoTotal ? parseFloat(costoTotal) : 0;
 
     const roiCalculado = ((totalIngresosCalculados - costo) / (costo || 1)) * 100;
-    setRoi(roiCalculado);
+    setRoi(parseFloat(roiCalculado.toFixed(2))); // Limitamos a 2 decimales
+    
 
-    // Calcular período de recuperación (payback)
     let acumulado = 0;
     let paybackAnio = 'No recuperado';
     for (let i = 0; i < ingresosProyectados.length; i++) {
@@ -52,11 +47,50 @@ const AddProyecto = () => {
     setPayback(paybackAnio);
   }, [costoTotal, ingresosProyectados]);
 
-  const handleAddProyecto = () => {
-    console.log('Nuevo proyecto:', { nombre, descripcion, costoTotal, duracion, fuentesFinanciacion, ingresosProyectados });
-    router.push('/inversiones');
-  };
+  const handleAddProyecto = async () => {
+    // Recalcular los ingresos proyectados antes de enviarlos
+    const totalIngresosCalculados = ingresosProyectados.reduce(
+      (total, ingreso) => total + ingreso.monto,
+      0
+    );
 
+    const proyecto = {
+      nombre,
+      descripcion,
+      costo_total: parseFloat(costoTotal),
+      duracion: parseInt(duracion),
+      ingresos_proyectados: ingresosProyectados,
+      roi,
+      payback,
+      total_ingresos: totalIngresosCalculados, // Asegúrate de incluir el total de ingresos proyectados
+    };
+  
+    try {
+      const response = await fetch('https://back-finanzas.onrender.com/api/proyectos/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(proyecto),
+      });
+  
+      const responseData = await response.json();
+      console.log('Response status:', response.status);
+      console.log('Response data:', responseData);
+  
+      if (response.ok) {
+        console.log('Proyecto creado con éxito');
+        router.push('/inversiones');
+      } else {
+        console.error('Error al crear el proyecto:', responseData);
+        alert('Error en el servidor: ' + responseData.detail || 'Error desconocido');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+      alert('Error en la solicitud al servidor');
+    }
+  };
+  
   const handleIngresoChange = (index: number, field: keyof IngresoProyectado, value: string | number) => {
     const newIngresos = [...ingresosProyectados];
     newIngresos[index][field] = typeof value === 'string' ? parseInt(value) : value;
@@ -125,17 +159,6 @@ const AddProyecto = () => {
           />
         </div>
 
-        {/* Fuentes de Financiación */}
-        <div className="relative lg:col-span-2">
-          <label className="block text-black font-bold mb-2">Fuentes de Financiación</label>
-          <textarea
-            value={fuentesFinanciacion}
-            onChange={(e) => setFuentesFinanciacion(e.target.value)}
-            className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black transition-all duration-300 text-black"
-            placeholder="Detalles de las fuentes de financiación"
-          />
-        </div>
-
         {/* Ingresos Proyectados */}
         <div className="relative lg:col-span-2">
           <label className="block text-black font-bold mb-2">Ingresos Proyectados</label>
@@ -178,7 +201,7 @@ const AddProyecto = () => {
         <div className="relative lg:col-span-2 mt-6 p-4 bg-gray-100 rounded-lg grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-white rounded-lg shadow-md">
             <h3 className="text-lg font-bold text-black">Total Ingresos</h3>
-            <p className="text-2xl text-green-500">${totalIngresos.toLocaleString()}</p>
+            <p className="text-2xl text-green-500">${totalIngresos}</p>
           </div>
           <div className="p-4 bg-white rounded-lg shadow-md">
             <h3 className="text-lg font-bold text-black">ROI</h3>
@@ -198,6 +221,15 @@ const AddProyecto = () => {
       >
         <FaCheck className="mr-2" />
         Crear Proyecto
+      </button>
+
+      {/* Botón de Volver */}
+      <button
+        onClick={() => router.back()}
+        className="mt-5 bottom-6 right-6 bg-black text-white p-4 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:bg-gray-800"
+      >
+        <FaArrowLeft className="mr-2" />
+        Volver
       </button>
     </div>
   );

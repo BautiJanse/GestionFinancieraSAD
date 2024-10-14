@@ -20,7 +20,7 @@ const AddIngreso = () => {
     const nuevoIngreso = {
       description: description,
       amount: parseFloat(amount), // Asegurarse de convertir el monto a número
-      fecha: date,
+      date: date,
       category: category,
       paymentMethod: paymentMethod,     
       tipo_ingreso: tipo_ingreso, // Incluye tipo de ingreso
