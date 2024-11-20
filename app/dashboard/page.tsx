@@ -34,7 +34,7 @@ const Dashboard = () => {
       {/* Widgets */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 w-full">
         <div className="bg-green-700 text-white p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg">
-          <h2 className="text-lg font-semibold">Ingresos</h2>
+          <h2 className="text-lg font-semibold">EARNINGS</h2>
           <p className="text-2xl">${totalIngresos}</p> 
         </div>
         <div className="bg-red-700 text-white p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg">
