@@ -27,6 +27,28 @@ const Dashboard = () => {
     fetchResumenFinanciero();
   }, []);
 
+   // Función de ping para mantener la base de datos activa
+   const keepDatabaseAlive = async () => {
+    try {
+      // Puedes usar un endpoint simple, incluso el mismo `/api/resumen/`
+      await fetch('https://back-finanzas.onrender.com/api/ping'); // Endpoint de ping
+      console.log('Ping exitoso');
+    } catch (error) {
+      console.error('Error al hacer ping a la base de datos:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchResumenFinanciero();
+
+    // Intervalo para mantener la base de datos activa
+    const interval = setInterval(() => {
+      keepDatabaseAlive();
+    }, 180000); // 3 minutos (180,000 ms)
+
+    return () => clearInterval(interval); // Limpiar el intervalo al desmontar el componente
+  }, []);
+
   return (
     <div className="p-6 bg-white min-h-screen mx-auto max-w-7xl flex flex-col items-center">
       <h1 className="text-2xl font-bold text-black mb-6">Dashboard</h1>
@@ -34,7 +56,7 @@ const Dashboard = () => {
       {/* Widgets */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 w-full">
         <div className="bg-green-700 text-white p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg">
-          <h2 className="text-lg font-semibold">EARNINGS</h2>
+          <h2 className="text-lg font-semibold">Ingresos</h2>
           <p className="text-2xl">${totalIngresos}</p> 
         </div>
         <div className="bg-red-700 text-white p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg">

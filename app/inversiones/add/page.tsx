@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaCheck, FaPlus, FaTrash, FaArrowLeft } from 'react-icons/fa';
+import { FaCheck, FaPlus, FaTrash, FaArrowLeft, FaRobot } from 'react-icons/fa';
 
 interface IngresoProyectado {
   anio: number;
@@ -19,6 +19,9 @@ const AddProyecto = () => {
   const [roi, setRoi] = useState(0);
   const [payback, setPayback] = useState('');
   const [totalIngresos, setTotalIngresos] = useState(0);
+
+  const [simulatedPrediction, setSimulatedPrediction] = useState<number | null>(null);
+
 
   const router = useRouter();
 
@@ -104,6 +107,17 @@ const AddProyecto = () => {
   const removeIngresoProyectado = (index: number) => {
     const newIngresos = ingresosProyectados.filter((_, i) => i !== index);
     setIngresosProyectados(newIngresos);
+  };
+
+
+  // Función para simular la predicción del modelo ML
+  const simulateMLPrediction = () => {
+    const totalIngresosCalculados = ingresosProyectados.reduce(
+      (total, ingreso) => total + ingreso.monto,
+      0
+    );
+    const simulatedValue = totalIngresosCalculados * 1.1; // Simula un incremento del 10%
+    setSimulatedPrediction(simulatedValue);
   };
 
   return (
@@ -222,6 +236,21 @@ const AddProyecto = () => {
         <FaCheck className="mr-2" />
         Crear Proyecto
       </button>
+      {/* Botón para simular modelo de ML */}
+      <button
+        onClick={simulateMLPrediction}
+        className="mt-6 bg-purple-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:bg-purple-800"
+      >
+        <FaRobot className="mr-2" />
+        Simular ML
+      </button>
+
+      {simulatedPrediction !== null && (
+        <div className="mt-6 p-4 bg-purple-100 text-purple-800 rounded-lg">
+          <p className="text-lg font-semibold">Predicción simulada del modelo ML:</p>
+          <p className="text-2xl">${simulatedPrediction.toFixed(2)}</p>
+        </div>
+      )}
 
       {/* Botón de Volver */}
       <button
@@ -232,6 +261,8 @@ const AddProyecto = () => {
         Volver
       </button>
     </div>
+
+    
   );
 };
 
