@@ -46,7 +46,6 @@ export default function LoginPage() {
             </div>
           )}
           <div className="space-y-2">
-            <Label htmlFor="username">Usuario</Label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <Input
@@ -60,7 +59,6 @@ export default function LoginPage() {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Contraseña</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <Input
