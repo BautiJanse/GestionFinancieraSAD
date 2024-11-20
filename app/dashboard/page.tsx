@@ -44,7 +44,7 @@ const Dashboard = () => {
     // Intervalo para mantener la base de datos activa
     const interval = setInterval(() => {
       keepDatabaseAlive();
-    }, 180000); // 3 minutos (180,000 ms)
+    }, 60000); // 3 minutos (180,000 ms)
 
     return () => clearInterval(interval); // Limpiar el intervalo al desmontar el componente
   }, []);
