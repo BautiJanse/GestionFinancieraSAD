@@ -33,6 +33,7 @@ const GastosPage = () => {
   const [filterExpenseType, setFilterExpenseType] = useState(''); // Filtro para tipo de gasto
   const [filterPaymentMethod, setFilterPaymentMethod] = useState(''); // Filtro para método de pago
 
+  
   // useEffect para hacer la llamada a la API al montar el componente
   useEffect(() => {
     const fetchGastos = async () => {

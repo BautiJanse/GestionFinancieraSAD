@@ -1,14 +1,15 @@
-// components/Sidebar.tsx
 'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Para redirigir al login
 import { FaTachometerAlt, FaMoneyBillWave, FaDollarSign, FaChartLine, FaSignOutAlt, FaProjectDiagram } from 'react-icons/fa';
 import { MdOutlineClose } from 'react-icons/md'; // Icono para cerrar más estilizado
 import { FiMenu } from 'react-icons/fi'; // Icono de menú desplegable
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
+  const router = useRouter(); // Hook para redirigir al login
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -16,6 +17,11 @@ const Sidebar = () => {
 
   const handleLinkClick = () => {
     setIsOpen(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn'); // Eliminar el estado de autenticación
+    router.push('/login'); // Redirigir al login
   };
 
   return (
@@ -62,7 +68,10 @@ const Sidebar = () => {
 
         {/* Botón de cerrar sesión */}
         <div className="mt-auto">
-          <button className="flex items-center text-white hover:bg-red-600 p-3 rounded-lg w-full transition-transform duration-300 ease-in-out transform hover:scale-105">
+          <button
+            onClick={handleLogout} // Lógica de cierre de sesión
+            className="flex items-center text-white hover:bg-red-600 p-3 rounded-lg w-full transition-transform duration-300 ease-in-out transform hover:scale-105"
+          >
             <FaSignOutAlt className="mr-3" /> Cerrar sesión
           </button>
         </div>

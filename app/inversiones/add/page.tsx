@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { FaCheck, FaPlus, FaTrash, FaArrowLeft, FaRobot } from 'react-icons/fa';
+import { FaCheck, FaPlus, FaTrash, FaArrowLeft, FaRobot, FaSpinner } from 'react-icons/fa';
 
 interface IngresoProyectado {
   anio: number;
@@ -20,8 +20,12 @@ const AddProyecto = () => {
   const [payback, setPayback] = useState('');
   const [totalIngresos, setTotalIngresos] = useState(0);
 
-  const [simulatedPrediction, setSimulatedPrediction] = useState<number | null>(null);
+  const [simulatedNextYearIncome, setSimulatedNextYearIncome] = useState<number | null>(null);
+  const [simulatedRiskLevel, setSimulatedRiskLevel] = useState<string | null>(null);
+  const [simulatedRiskConclusion, setSimulatedRiskConclusion] = useState<string | null>(null);
+  const [simulatedProfitMargin, setSimulatedProfitMargin] = useState<number | null>(null);
 
+  const [isSimulating, setIsSimulating] = useState(false);
 
   const router = useRouter();
 
@@ -36,7 +40,6 @@ const AddProyecto = () => {
 
     const roiCalculado = ((totalIngresosCalculados - costo) / (costo || 1)) * 100;
     setRoi(parseFloat(roiCalculado.toFixed(2))); // Limitamos a 2 decimales
-    
 
     let acumulado = 0;
     let paybackAnio = 'No recuperado';
@@ -51,7 +54,6 @@ const AddProyecto = () => {
   }, [costoTotal, ingresosProyectados]);
 
   const handleAddProyecto = async () => {
-    // Recalcular los ingresos proyectados antes de enviarlos
     const totalIngresosCalculados = ingresosProyectados.reduce(
       (total, ingreso) => total + ingreso.monto,
       0
@@ -65,9 +67,9 @@ const AddProyecto = () => {
       ingresos_proyectados: ingresosProyectados,
       roi,
       payback,
-      total_ingresos: totalIngresosCalculados, // Asegúrate de incluir el total de ingresos proyectados
+      total_ingresos: totalIngresosCalculados,
     };
-  
+
     try {
       const response = await fetch('https://back-finanzas.onrender.com/api/proyectos/', {
         method: 'POST',
@@ -76,11 +78,8 @@ const AddProyecto = () => {
         },
         body: JSON.stringify(proyecto),
       });
-  
+
       const responseData = await response.json();
-      console.log('Response status:', response.status);
-      console.log('Response data:', responseData);
-  
       if (response.ok) {
         console.log('Proyecto creado con éxito');
         router.push('/inversiones');
@@ -93,7 +92,7 @@ const AddProyecto = () => {
       alert('Error en la solicitud al servidor');
     }
   };
-  
+
   const handleIngresoChange = (index: number, field: keyof IngresoProyectado, value: string | number) => {
     const newIngresos = [...ingresosProyectados];
     newIngresos[index][field] = typeof value === 'string' ? parseInt(value) : value;
@@ -109,15 +108,51 @@ const AddProyecto = () => {
     setIngresosProyectados(newIngresos);
   };
 
-
   // Función para simular la predicción del modelo ML
   const simulateMLPrediction = () => {
-    const totalIngresosCalculados = ingresosProyectados.reduce(
-      (total, ingreso) => total + ingreso.monto,
-      0
-    );
-    const simulatedValue = totalIngresosCalculados * 1.1; // Simula un incremento del 10%
-    setSimulatedPrediction(simulatedValue);
+    setIsSimulating(true);
+
+    setTimeout(() => {
+      const totalIngresosCalculados = ingresosProyectados.reduce(
+        (total, ingreso) => total + ingreso.monto,
+        0
+      );
+      const costo = parseFloat(costoTotal || '0');
+      const years = ingresosProyectados.length;
+
+      // Predicción del siguiente año
+      const avgIncome = totalIngresosCalculados / years;
+      const nextYearIncome = avgIncome * (1 + Math.random() * 0.15); // Incremento aleatorio entre 5% y 15%
+
+      // Margen de ganancia
+      const operationalCosts = totalIngresosCalculados * 0.2; // 20% de los ingresos como costos operativos.
+const taxes = totalIngresosCalculados * 0.15; // 15% de los ingresos como impuestos.
+const depreciationBenefits = costo * 0.05; // 5% del costo como beneficio de amortización.
+
+const profitMargin = totalIngresosCalculados - costo - operationalCosts - taxes + depreciationBenefits;
+
+
+      // Nivel de riesgo
+      let riskLevel = '';
+      let riskConclusion = '';
+
+      if (totalIngresosCalculados < costo) {
+        riskLevel = 'Alto';
+        riskConclusion = 'El proyecto tiene riesgo ALTO ya que no se recupera el dinero invertido.';
+      } else if (totalIngresosCalculados > costo && totalIngresosCalculados - costo < costo * 0.2) {
+        riskLevel = 'Medio';
+        riskConclusion = 'El proyecto tiene riesgo MEDIO ya que se recupera el dinero, pero no se genera una ganancia significativa.';
+      } else {
+        riskLevel = 'Bajo';
+        riskConclusion = 'El proyecto tiene riesgo BAJO ya que se recupera la inversión y se genera una buena ganancia.';
+      }
+
+      setSimulatedNextYearIncome(parseFloat(nextYearIncome.toFixed(2)));
+      setSimulatedRiskLevel(riskLevel);
+      setSimulatedRiskConclusion(riskConclusion);
+      setSimulatedProfitMargin(profitMargin);
+      setIsSimulating(false);
+    }, 5000);
   };
 
   return (
@@ -228,6 +263,7 @@ const AddProyecto = () => {
         </div>
       </form>
 
+
       {/* Botón de Crear Proyecto */}
       <button
         onClick={handleAddProyecto}
@@ -236,6 +272,7 @@ const AddProyecto = () => {
         <FaCheck className="mr-2" />
         Crear Proyecto
       </button>
+
       {/* Botón para simular modelo de ML */}
       <button
         onClick={simulateMLPrediction}
@@ -245,12 +282,42 @@ const AddProyecto = () => {
         Simular ML
       </button>
 
-      {simulatedPrediction !== null && (
-        <div className="mt-6 p-4 bg-purple-100 text-purple-800 rounded-lg">
-          <p className="text-lg font-semibold">Predicción simulada del modelo ML:</p>
-          <p className="text-2xl">${simulatedPrediction.toFixed(2)}</p>
+      {/* Indicador de carga */}
+      {isSimulating && (
+        <div className="mt-6 flex items-center justify-center text-purple-700">
+          <FaSpinner className="animate-spin text-2xl mr-2" />
+          Calculando predicciones...
         </div>
       )}
+
+      {/* Resultados de las simulaciones */}
+{!isSimulating && simulatedNextYearIncome !== null && (
+  <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div className="p-4 bg-white rounded-lg shadow-md">
+      <h3 className="text-lg font-bold text-black">Predicción Ingreso Siguiente Año</h3>
+      <p className="text-2xl text-green-500">${simulatedNextYearIncome.toFixed(2)}</p>
+    </div>
+    <div className="p-4 bg-white rounded-lg shadow-md">
+      <h3 className="text-lg font-bold text-black">Riesgo del Proyecto</h3>
+      <p
+        className={`text-2xl ${
+          simulatedRiskLevel === 'Alto'
+            ? 'text-red-500'
+            : simulatedRiskLevel === 'Medio'
+            ? 'text-orange-500'
+            : 'text-green-500'
+        }`}
+      >
+        {simulatedRiskLevel}
+      </p>
+      <p className="text-sm text-gray-600">{simulatedRiskConclusion}</p>
+    </div>
+    <div className="p-4 bg-white rounded-lg shadow-md">
+      <h3 className="text-lg font-bold text-black">Margen de Ganancia</h3>
+      <p className="text-2xl text-blue-500">${simulatedProfitMargin?.toFixed(2)}</p>
+    </div>
+  </div>
+)}
 
       {/* Botón de Volver */}
       <button
@@ -261,8 +328,6 @@ const AddProyecto = () => {
         Volver
       </button>
     </div>
-
-    
   );
 };
 
