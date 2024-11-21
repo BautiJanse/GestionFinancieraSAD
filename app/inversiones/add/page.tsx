@@ -24,6 +24,7 @@ const AddProyecto = () => {
   const [simulatedRiskLevel, setSimulatedRiskLevel] = useState<string | null>(null);
   const [simulatedRiskConclusion, setSimulatedRiskConclusion] = useState<string | null>(null);
   const [simulatedProfitMargin, setSimulatedProfitMargin] = useState<number | null>(null);
+  const [simulatedProfitConclusion, setSimulatedProfitConclusion] = useState<string | null>(null);
 
   const [isSimulating, setIsSimulating] = useState(false);
 
@@ -39,7 +40,7 @@ const AddProyecto = () => {
     const costo = costoTotal ? parseFloat(costoTotal) : 0;
 
     const roiCalculado = ((totalIngresosCalculados - costo) / (costo || 1)) * 100;
-    setRoi(parseFloat(roiCalculado.toFixed(2))); // Limitamos a 2 decimales
+    setRoi(parseFloat(roiCalculado.toFixed(2)));
 
     let acumulado = 0;
     let paybackAnio = 'No recuperado';
@@ -108,7 +109,6 @@ const AddProyecto = () => {
     setIngresosProyectados(newIngresos);
   };
 
-  // Función para simular la predicción del modelo ML
   const simulateMLPrediction = () => {
     setIsSimulating(true);
 
@@ -122,35 +122,40 @@ const AddProyecto = () => {
 
       // Predicción del siguiente año
       const avgIncome = totalIngresosCalculados / years;
-      const nextYearIncome = avgIncome * (1 + Math.random() * 0.15); // Incremento aleatorio entre 5% y 15%
+      const nextYearIncome = avgIncome * (1 + Math.random() * 0.15);
 
       // Margen de ganancia
-      const operationalCosts = totalIngresosCalculados * 0.2; // 20% de los ingresos como costos operativos.
-const taxes = totalIngresosCalculados * 0.15; // 15% de los ingresos como impuestos.
-const depreciationBenefits = costo * 0.05; // 5% del costo como beneficio de amortización.
+      const operationalCosts = totalIngresosCalculados * 0.2;
+      const taxes = totalIngresosCalculados * 0.15;
+      const depreciationBenefits = costo * 0.05;
 
-const profitMargin = totalIngresosCalculados - costo - operationalCosts - taxes + depreciationBenefits;
+      const profitMargin = totalIngresosCalculados - (costo + operationalCosts + taxes) + depreciationBenefits;
 
+      const profitConclusion =
+        profitMargin < 0
+          ? 'El margen de ganancia es NEGATIVO. El proyecto no es viable.'
+          : `El margen de ganancia es ${profitMargin > costo * 0.2 ? 'ALTO' : 'BAJO'}, dependiendo de los ingresos y costos.`;
 
-      // Nivel de riesgo
+      // Riesgo del proyecto
       let riskLevel = '';
       let riskConclusion = '';
 
-      if (totalIngresosCalculados < costo) {
+      if (profitMargin < 0) {
         riskLevel = 'Alto';
-        riskConclusion = 'El proyecto tiene riesgo ALTO ya que no se recupera el dinero invertido.';
-      } else if (totalIngresosCalculados > costo && totalIngresosCalculados - costo < costo * 0.2) {
+        riskConclusion = 'El proyecto tiene riesgo ALTO ya que el margen de ganancia es negativo.';
+      } else if (profitMargin > 0 && profitMargin < costo * 0.2) {
         riskLevel = 'Medio';
-        riskConclusion = 'El proyecto tiene riesgo MEDIO ya que se recupera el dinero, pero no se genera una ganancia significativa.';
+        riskConclusion = 'El proyecto tiene riesgo MEDIO ya que se recupera la inversión pero las ganancias son limitadas.';
       } else {
         riskLevel = 'Bajo';
-        riskConclusion = 'El proyecto tiene riesgo BAJO ya que se recupera la inversión y se genera una buena ganancia.';
+        riskConclusion = 'El proyecto tiene riesgo BAJO ya que se recupera la inversión y genera una buena ganancia.';
       }
 
       setSimulatedNextYearIncome(parseFloat(nextYearIncome.toFixed(2)));
       setSimulatedRiskLevel(riskLevel);
       setSimulatedRiskConclusion(riskConclusion);
       setSimulatedProfitMargin(profitMargin);
+      setSimulatedProfitConclusion(profitConclusion);
       setIsSimulating(false);
     }, 5000);
   };
@@ -332,3 +337,4 @@ const profitMargin = totalIngresosCalculados - costo - operationalCosts - taxes 
 };
 
 export default AddProyecto;
+

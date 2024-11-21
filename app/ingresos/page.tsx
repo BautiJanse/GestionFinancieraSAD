@@ -34,28 +34,53 @@ const IngresosPage = () => {
   const [filterIncomeType, setFilterIncomeType] = useState(''); // Filtro para tipo de ingreso
   const [filterPaymentMethod, setFilterPaymentMethod] = useState(''); // Filtro para método de pago
 
-  // useEffect para hacer la llamada a la API al montar el componente
-  useEffect(() => {
-    const fetchIngresos = async () => {
-      try {
-        const response = await fetch('https://back-finanzas.onrender.com/api/ingresos/');
-        if (!response.ok) {
-          throw new Error('Error al obtener los ingresos');
-        }
-        const data = await response.json();
-        setIngresos(data);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message); // TypeScript sabe que 'error' tiene una propiedad 'message'
-        } else {
-          setError('Error desconocido');
-        }
-      } finally {
-        setLoading(false);
+  // Función para traer los ingresos
+  const fetchIngresos = async () => {
+    try {
+      const response = await fetch('https://back-finanzas.onrender.com/api/ingresos/');
+      if (!response.ok) {
+        throw new Error('Error al obtener los ingresos');
       }
-    };
+      const data = await response.json();
+      setIngresos(data);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Error desconocido');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // Función para mantener activa la base de datos
+  const keepDatabaseAlive = async () => {
+    try {
+      const response = await fetch('https://back-finanzas.onrender.com/api/ingresos/');
+      if (!response.ok) {
+        throw new Error('Error al mantener activa la base de datos');
+      }
+      const data = await response.json();
+      if (data.length > 0) {
+        console.log('Primer ingreso:', data[0]); // Log para verificar que la función trabaja correctamente
+      }
+    } catch (error) {
+      console.error('Error al mantener activa la base de datos:', error);
+    }
+  };
+
+  // useEffect para inicializar los ingresos
+  useEffect(() => {
     fetchIngresos();
+
+    // Mantener la base de datos activa cada 3 minutos
+    const interval = setInterval(() => {
+      keepDatabaseAlive();
+    }, 180000); // 180000ms = 3 minutos
+
+    // Limpiar el intervalo al desmontar el componente
+    return () => clearInterval(interval);
   }, []);
 
   // Función para filtrar ingresos
