@@ -284,7 +284,7 @@ const AddProyecto = () => {
         className="mt-6 bg-purple-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:bg-purple-800"
       >
         <FaRobot className="mr-2" />
-        Simular ML
+        Calcular
       </button>
 
       {/* Indicador de carga */}
@@ -320,6 +320,7 @@ const AddProyecto = () => {
     <div className="p-4 bg-white rounded-lg shadow-md">
       <h3 className="text-lg font-bold text-black">Margen de Ganancia</h3>
       <p className="text-2xl text-blue-500">${simulatedProfitMargin?.toFixed(2)}</p>
+      <p className="text-sm text-gray-600">Estimado con 20% costos operativos, 15% de impuestos y 5% amortizacion</p>
     </div>
   </div>
 )}
