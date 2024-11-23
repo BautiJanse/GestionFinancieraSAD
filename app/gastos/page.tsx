@@ -107,7 +107,7 @@ const GastosPage = () => {
             <option value="">Todas</option>
             <option value="Mantenimiento">Mantenimiento</option>
             <option value="Alquiler">Alquiler</option>
-            <option value="Servicios">Servicios</option>
+            <option value="Servicios">Compras</option>
             <option value="Transporte">Transporte</option>
             <option value="Otro">Otro</option>
           </select>
