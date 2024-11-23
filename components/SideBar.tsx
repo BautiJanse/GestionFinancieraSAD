@@ -61,7 +61,7 @@ const Sidebar = () => {
             
             <Link className="flex items-center text-white hover:bg-gray-700 p-3 rounded-lg cursor-pointer transition-transform duration-300 ease-in-out transform hover:scale-105 hover:text-yellow-400" href="/inversiones" onClick={handleLinkClick}>
               <FaProjectDiagram className="mr-3" /> 
-              <h1>Inversiones</h1>
+              <h1>Proyectos</h1>
             </Link>
           </ul>
         </nav>

@@ -134,7 +134,6 @@ const IngresosPage = () => {
           >
             <option value="">Todas</option>
             <option value="Salario">Salario</option>
-            <option value="Inversiones">Inversiones</option>
             <option value="Ventas">Ventas</option>
             <option value="Otro">Otro</option>
           </select>

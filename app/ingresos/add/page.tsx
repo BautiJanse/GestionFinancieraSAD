@@ -116,8 +116,7 @@ const AddIngreso = () => {
           >
             <option value="">Seleccione una categoría</option>
             <option value="Salario">Salario</option>
-            <option value="Freelance">Freelance</option>
-            <option value="Inversiones">Inversiones</option>
+            <option value="Freelance">Sponsor</option>
             <option value="Venta">Venta</option>
             <option value="Otro">Otro</option>
           </select>
