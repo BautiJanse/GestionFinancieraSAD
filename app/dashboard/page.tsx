@@ -27,67 +27,36 @@ ChartJS.register(
 const Dashboard = () => {
   const [totalIngresos, setTotalIngresos] = useState(0);
   const [totalGastos, setTotalGastos] = useState(0);
-  const [totalInvertido, setTotalInvertido] = useState(0);
+  const [totalInvertido, setTotalInvertido] = useState(0); // Si hay proyectos, puedes ajustar esta lógica
   const [balance, setBalance] = useState(0);
 
-  const [ingresosMensuales, setIngresosMensuales] = useState<number[]>([]);
-  const [gastosMensuales, setGastosMensuales] = useState<number[]>([]);
-  const [dateLabels, setDateLabels] = useState<string[]>([]);
-
-  const [chartType, setChartType] = useState('bar');
   const isAuthenticated = useAuth();
 
-  // Función para obtener los datos de resumen
-  const fetchResumen = async () => {
-    try {
-      const response = await fetch('https://back-finanzas.onrender.com/api/resumen/');
-      const data = await response.json();
-
-      setTotalIngresos(data.total_ingresos_recurrentes || 0);
-      setTotalGastos(data.total_gastos_recurrentes || 0);
-      setTotalInvertido(data.total_costo_proyectos || 0);
-      setBalance(data.total_ingresos_recurrentes - data.total_gastos_recurrentes || 0);
-    } catch (error) {
-      console.error('Error al obtener el resumen:', error);
-    }
-  };
-
-  // Función para obtener los datos de ingresos
-  const fetchIngresos = async () => {
+  // Función para obtener todos los ingresos
+  const fetchAllIngresos = async () => {
     try {
       const response = await fetch('https://back-finanzas.onrender.com/api/ingresos');
       const data = await response.json();
-
-      const monthlyData: Record<string, number> = {};
-      data.forEach((item: { fecha: string; amount: number }) => {
-        const date = new Date(item.fecha);
-        const label = `${date.getMonth() + 1}/${date.getFullYear()}`;
-        if (!monthlyData[label]) monthlyData[label] = 0;
-        monthlyData[label] += item.amount;
-      });
-
-      setIngresosMensuales(Object.values(monthlyData));
-      setDateLabels(Object.keys(monthlyData));
+      const total = data.reduce(
+        (sum: number, ingreso: { amount: any }) => sum + parseFloat(ingreso.amount || 0),
+        0
+      );
+      setTotalIngresos(total);
     } catch (error) {
       console.error('Error al obtener los ingresos:', error);
     }
   };
 
-  // Función para obtener los datos de gastos
-  const fetchGastos = async () => {
+  // Función para obtener todos los gastos
+  const fetchAllGastos = async () => {
     try {
       const response = await fetch('https://back-finanzas.onrender.com/api/gastos');
       const data = await response.json();
-
-      const monthlyData: Record<string, number> = {};
-      data.forEach((item: { fecha: string; amount: number }) => {
-        const date = new Date(item.fecha);
-        const label = `${date.getMonth() + 1}/${date.getFullYear()}`;
-        if (!monthlyData[label]) monthlyData[label] = 0;
-        monthlyData[label] += item.amount;
-      });
-
-      setGastosMensuales(Object.values(monthlyData));
+      const total = data.reduce(
+        (sum: number, gasto: { amount: any }) => sum + parseFloat(gasto.amount || 0),
+        0
+      );
+      setTotalGastos(total);
     } catch (error) {
       console.error('Error al obtener los gastos:', error);
     }
@@ -96,14 +65,14 @@ const Dashboard = () => {
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    fetchResumen();
-    fetchIngresos();
-    fetchGastos();
+    fetchAllIngresos();
+    fetchAllGastos();
   }, [isAuthenticated]);
 
-  const handleChartTypeChange = (type: string) => {
-    setChartType(type);
-  };
+  // Calcula el balance una vez que se obtienen ingresos y gastos
+  useEffect(() => {
+    setBalance(totalIngresos - totalGastos);
+  }, [totalIngresos, totalGastos]);
 
   const barChartData = {
     labels: ['Ingresos', 'Gastos', 'Inversiones', 'Balance'],
@@ -112,22 +81,6 @@ const Dashboard = () => {
         label: 'Resumen Financiero',
         data: [totalIngresos, totalGastos, totalInvertido, balance],
         backgroundColor: ['#4CAF50', '#F44336', '#FFC107', '#000000'],
-      },
-    ],
-  };
-
-  const barChartIngresosGastos = {
-    labels: dateLabels,
-    datasets: [
-      {
-        label: 'Ingresos',
-        data: ingresosMensuales,
-        backgroundColor: '#4CAF50',
-      },
-      {
-        label: 'Gastos',
-        data: gastosMensuales,
-        backgroundColor: '#F44336',
       },
     ],
   };
@@ -170,32 +123,14 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Selector de Gráficos */}
-      <div className="mb-4 flex space-x-4">
-        {['bar', 'ingresos_gastos', 'doughnut'].map((type) => (
-          <button
-            key={type}
-            onClick={() => handleChartTypeChange(type)}
-            className={`px-4 py-2 border rounded-lg ${
-              chartType === type ? 'bg-black text-white' : 'bg-gray-200 text-black'
-            } hover:bg-gray-300`}
-          >
-            {type === 'bar' && 'Barras'}
-            {type === 'ingresos_gastos' && 'Ingresos vs Gastos'}
-            {type === 'doughnut' && 'Distribución'}
-          </button>
-        ))}
-      </div>
-
-      {/* Gráfico Dinámico */}
-      <div className="bg-gray-100 p-4 rounded-lg shadow-lg w-full h-[400px]">
-        {chartType === 'bar' && <Bar data={barChartData} options={{ maintainAspectRatio: false, responsive: true }} />}
-        {chartType === 'ingresos_gastos' && (
-          <Bar data={barChartIngresosGastos} options={{ maintainAspectRatio: false, responsive: true }} />
-        )}
-        {chartType === 'doughnut' && (
+      {/* Gráficos */}
+      <div className="flex flex-wrap md:flex-nowrap w-full gap-4">
+        <div className="bg-gray-100 p-4 rounded-lg shadow-lg w-full md:w-1/2 h-[400px]">
+          <Bar data={barChartData} options={{ maintainAspectRatio: false, responsive: true }} />
+        </div>
+        <div className="bg-gray-100 p-4 rounded-lg shadow-lg w-full md:w-1/2 h-[400px]">
           <Doughnut data={doughnutChartData} options={{ maintainAspectRatio: false, responsive: true }} />
-        )}
+        </div>
       </div>
     </div>
   );
