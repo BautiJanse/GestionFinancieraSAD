@@ -191,13 +191,13 @@ const AddProyecto = () => {
 
         {/* Costo Total */}
         <div className="relative">
-          <label className="block text-black font-bold mb-2">Costo Total</label>
+          <label className="block text-black font-bold mb-2">Inversion Inicial</label>
           <input
             type="number"
             value={costoTotal}
             onChange={(e) => setCostoTotal(e.target.value)}
             className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-black transition-all duration-300 text-black"
-            placeholder="Costo total del proyecto"
+            placeholder="Inversion inicial del proyecto"
           />
         </div>
 
