@@ -21,7 +21,7 @@ export default function LoginPage() {
 
     if (username === storedUser && password === storedPassword) {
       // Guardamos la sesión en localStorage
-      localStorage.setItem('isLoggedIn', 'true')
+      localStorage.setItem('isLoggedIn', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZ2VzdGlvbl9maW5hbmNpZXJhIiwibW9kdWxlIjoiZ2VzdGlvbl9maW5hbmNpZXJhIn0.3mwZIDf9ZQYhO9xT4mtXlSAzWT1ATjPn1Ly8h5DaByE')
 
       // Redirigimos al usuario al dashboard
       router.push('/dashboard')
