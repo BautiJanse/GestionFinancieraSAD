@@ -11,7 +11,7 @@ interface Gasto {
   category: string;
   type: string; // Añadir el campo type
   paymentMethod: string; // Añadir el campo paymentMethod
-  note?: string; // Este campo puede ser opcional
+  note: string; // Este campo puede ser opcional
 }
 
 interface Params {
@@ -29,7 +29,6 @@ const AddGasto = () => {
   useEffect(() => {
     // Log para asegurarnos de que el id sea correcto
     console.log('Fetching gasto with ID:', params.id);
-
     const fetchGasto = async () => {
       try {
         const response = await fetch(`https://back-finanzas.onrender.com/api/gastos/${params.id}`);
@@ -40,7 +39,9 @@ const AddGasto = () => {
         }
 
         const data = await response.json();
+        
         setGasto(data); // Guardar los detalles del ingreso
+        
       } catch (error) {
         if (error instanceof Error) {
           console.error('Fetch error:', error);
@@ -53,6 +54,7 @@ const AddGasto = () => {
       }
     };
 
+    
     fetchGasto();
   }, [params.id]);
 

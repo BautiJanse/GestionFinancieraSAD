@@ -12,7 +12,7 @@ interface Ingreso {
   date: string;
   category: string;
   metodo_pago: string;
-  nota: string;
+  note: string;
   tipo_ingreso: string;
 }
 
@@ -135,6 +135,7 @@ const IngresosPage = () => {
             <option value="">Todas</option>
             <option value="Salario">Salario</option>
             <option value="Ventas">Ventas</option>
+            <option value="Inversiones">Inversiones</option>
             <option value="Otro">Otro</option>
           </select>
         </div>

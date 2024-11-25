@@ -41,6 +41,7 @@ const GastosPage = () => {
         const response = await fetch('https://back-finanzas.onrender.com/api/gastos');
         const data = await response.json();
         setGastos(data);
+        console.log(data)
       } catch (error: unknown) {
         if (error instanceof Error) {
           setError(error.message);
@@ -107,7 +108,7 @@ const GastosPage = () => {
             <option value="">Todas</option>
             <option value="Mantenimiento">Mantenimiento</option>
             <option value="Alquiler">Alquiler</option>
-            <option value="Servicios">Compras</option>
+            <option value="Compras">Compras</option>
             <option value="Transporte">Transporte</option>
             <option value="Otro">Otro</option>
           </select>

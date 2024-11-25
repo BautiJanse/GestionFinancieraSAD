@@ -23,7 +23,7 @@ const AddGasto = () => {
       category: category,
       paymentMethod: paymentMethod,
       type: type,
-      nota: note,
+      note: note,
     };
 
     try {

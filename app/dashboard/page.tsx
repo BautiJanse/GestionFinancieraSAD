@@ -29,8 +29,26 @@ const Dashboard = () => {
   const [totalGastos, setTotalGastos] = useState(0);
   const [totalInvertido, setTotalInvertido] = useState(0); // Si hay proyectos, puedes ajustar esta lógica
   const [balance, setBalance] = useState(0);
-
+  const [totalProyecto, setTotalProyecto] = useState(0);
   const isAuthenticated = useAuth();
+
+  const fetchAllProyectos = async () => {
+    try {
+      const response = await fetch('https://back-finanzas.onrender.com/api/proyectos');
+      const data = await response.json();
+  
+      // Calcular el total de proyectos
+      const total = data.reduce(
+        (sum, proyecto) => sum + parseFloat(proyecto.costo_total || 0),
+        0
+      );
+      console.log('Total de Proyectos:', data);
+      setTotalProyecto(total);
+  
+     } catch (error) {
+      console.error('Error al obtener los proyectos:', error);
+    }
+  };
 
   // Función para obtener todos los ingresos
   const fetchAllIngresos = async () => {
@@ -41,7 +59,26 @@ const Dashboard = () => {
         (sum: number, ingreso: { amount: any }) => sum + parseFloat(ingreso.amount || 0),
         0
       );
+      console.log(total)
       setTotalIngresos(total);
+
+      const inversiones = data.filter((ingreso) => ingreso.category === 'Inversiones');
+    
+      console.log('Ingresos de tipo Inversiones:', inversiones);
+
+      const totalInversiones = inversiones.reduce(
+        (sum, ingreso) => sum + parseFloat(ingreso.amount || 0),
+        0
+      );
+  
+      console.log('Total de Inversiones:', totalInversiones);
+  
+      // Actualizar el estado de inversiones
+      setTotalInvertido(totalInversiones);
+
+      console.log(totalInversiones)
+  
+      
     } catch (error) {
       console.error('Error al obtener los ingresos:', error);
     }
@@ -57,6 +94,7 @@ const Dashboard = () => {
         0
       );
       setTotalGastos(total);
+      console.log(totalGastos)
     } catch (error) {
       console.error('Error al obtener los gastos:', error);
     }
@@ -67,6 +105,7 @@ const Dashboard = () => {
 
     fetchAllIngresos();
     fetchAllGastos();
+    fetchAllProyectos();
   }, [isAuthenticated]);
 
   // Calcula el balance una vez que se obtienen ingresos y gastos
@@ -75,22 +114,22 @@ const Dashboard = () => {
   }, [totalIngresos, totalGastos]);
 
   const barChartData = {
-    labels: ['Ingresos', 'Gastos', 'Inversiones', 'Balance'],
+    labels: ['Ingresos', 'Gastos', 'Proyectos', 'Balance'],
     datasets: [
       {
         label: 'Resumen Financiero',
-        data: [totalIngresos, totalGastos, totalInvertido, balance],
-        backgroundColor: ['#4CAF50', '#F44336', '#FFC107', '#000000'],
+        data: [totalIngresos, totalGastos, totalProyecto, balance],
+        backgroundColor: ['#4CAF50', '#F44336', '#FFC107', '#2196F3'],
       },
     ],
   };
 
   const doughnutChartData = {
-    labels: ['Ingresos', 'Gastos', 'Inversiones'],
+    labels: ['Ingresos', 'Gastos'],
     datasets: [
       {
-        data: [totalIngresos, totalGastos, totalInvertido],
-        backgroundColor: ['#4CAF50', '#F44336', '#FFC107'],
+        data: [totalIngresos, totalGastos],
+        backgroundColor: ['#4CAF50', '#F44336'],
       },
     ],
   };
@@ -114,10 +153,10 @@ const Dashboard = () => {
           <p className="text-xl">${totalGastos.toLocaleString()}</p>
         </div>
         <div className="bg-yellow-600 text-white p-4 rounded-lg shadow-md">
-          <h2 className="text-lg font-semibold">Inversiones</h2>
-          <p className="text-xl">${totalInvertido.toLocaleString()}</p>
+          <h2 className="text-lg font-semibold">Proyectos</h2>
+          <p className="text-xl">${totalProyecto.toLocaleString()}</p>
         </div>
-        <div className="bg-black text-white p-4 rounded-lg shadow-md">
+        <div className="bg-blue-500 text-white p-4 rounded-lg shadow-md">
           <h2 className="text-lg font-semibold">Balance</h2>
           <p className="text-xl">${balance.toLocaleString()}</p>
         </div>

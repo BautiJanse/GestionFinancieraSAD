@@ -24,8 +24,8 @@ const AddIngreso = () => {
       category: category,
       paymentMethod: paymentMethod,     
       tipo_ingreso: tipo_ingreso, // Incluye tipo de ingreso
-      nota: note,
-    };
+      note: note,
+    }; 
   
     try {
       // Realiza la solicitud POST a la API del backend en Render
@@ -38,6 +38,7 @@ const AddIngreso = () => {
       });
   
       if (response.ok) {
+        console.log(nuevoIngreso.note)
         // Si el ingreso se creó correctamente, redirigir a la página de ingresos
         console.log('Ingreso creado con éxito');
         router.push('/ingresos'); // Redirigir a la lista de ingresos
