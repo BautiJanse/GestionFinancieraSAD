@@ -27,7 +27,7 @@ ChartJS.register(
 const Dashboard = () => {
   const [totalIngresos, setTotalIngresos] = useState(0);
   const [totalGastos, setTotalGastos] = useState(0);
-  const [totalInvertido, setTotalInvertido] = useState(0); // Si hay proyectos, puedes ajustar esta lógica
+  const [totalInvertido, setTotalInvertido] = useState(0);
   const [balance, setBalance] = useState(0);
   const [totalProyecto, setTotalProyecto] = useState(0);
   const isAuthenticated = useAuth();
@@ -35,66 +35,56 @@ const Dashboard = () => {
   const fetchAllProyectos = async () => {
     try {
       const response = await fetch('https://back-finanzas.onrender.com/api/proyectos');
-      const data = await response.json();
-  
+      const data: { costo_total: number | string }[] = await response.json();
+
       // Calcular el total de proyectos
-      const total = data.reduce(
-        (sum, proyecto) => sum + parseFloat(proyecto.costo_total || 0),
-        0
-      );
+      const total = data.reduce((sum: number, proyecto) => {
+        return sum + parseFloat(proyecto.costo_total.toString() || '0');
+      }, 0);
+
       console.log('Total de Proyectos:', data);
       setTotalProyecto(total);
-  
-     } catch (error) {
+    } catch (error) {
       console.error('Error al obtener los proyectos:', error);
     }
   };
 
-  // Función para obtener todos los ingresos
   const fetchAllIngresos = async () => {
     try {
       const response = await fetch('https://back-finanzas.onrender.com/api/ingresos');
-      const data = await response.json();
-      const total = data.reduce(
-        (sum: number, ingreso: { amount: any }) => sum + parseFloat(ingreso.amount || 0),
-        0
-      );
-      console.log(total)
+      const data: { amount: number | string; category: string }[] = await response.json();
+
+      // Calcular total de ingresos
+      const total = data.reduce((sum: number, ingreso) => {
+        return sum + parseFloat(ingreso.amount.toString() || '0');
+      }, 0);
+
       setTotalIngresos(total);
 
+      // Calcular ingresos de tipo Inversiones
       const inversiones = data.filter((ingreso) => ingreso.category === 'Inversiones');
-    
-      console.log('Ingresos de tipo Inversiones:', inversiones);
+      const totalInversiones = inversiones.reduce((sum: number, ingreso) => {
+        return sum + parseFloat(ingreso.amount.toString() || '0');
+      }, 0);
 
-      const totalInversiones = inversiones.reduce(
-        (sum, ingreso) => sum + parseFloat(ingreso.amount || 0),
-        0
-      );
-  
       console.log('Total de Inversiones:', totalInversiones);
-  
-      // Actualizar el estado de inversiones
       setTotalInvertido(totalInversiones);
-
-      console.log(totalInversiones)
-  
-      
     } catch (error) {
       console.error('Error al obtener los ingresos:', error);
     }
   };
 
-  // Función para obtener todos los gastos
   const fetchAllGastos = async () => {
     try {
       const response = await fetch('https://back-finanzas.onrender.com/api/gastos');
-      const data = await response.json();
-      const total = data.reduce(
-        (sum: number, gasto: { amount: any }) => sum + parseFloat(gasto.amount || 0),
-        0
-      );
+      const data: { amount: number | string }[] = await response.json();
+
+      // Calcular total de gastos
+      const total = data.reduce((sum: number, gasto) => {
+        return sum + parseFloat(gasto.amount.toString() || '0');
+      }, 0);
+
       setTotalGastos(total);
-      console.log(totalGastos)
     } catch (error) {
       console.error('Error al obtener los gastos:', error);
     }
@@ -174,7 +164,5 @@ const Dashboard = () => {
     </div>
   );
 };
-
-
 
 export default Dashboard;
