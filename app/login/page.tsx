@@ -16,8 +16,8 @@ export default function LoginPage() {
   const router = useRouter()
 
   const handleLogin = () => {
-    const storedUser = 'admin' // Test user
-    const storedPassword = 'goat' // Test password
+    const storedUser = 'gestion_financiera' // Test user
+    const storedPassword = 'M$!2$4$2#&$m!52*3747' // Test password
 
     if (username === storedUser && password === storedPassword) {
       // Guardamos la sesión en localStorage
